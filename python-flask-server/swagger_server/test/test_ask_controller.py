@@ -5,86 +5,86 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.bid import Bid  # noqa: E501
+from swagger_server.models.ask import Ask  # noqa: E501
 from swagger_server.models.error_model import ErrorModel  # noqa: E501
-from swagger_server.models.new_bid import NewBid  # noqa: E501
+from swagger_server.models.new_ask import NewAsk  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
-class TestBidController(BaseTestCase):
-    """BidController integration test stubs"""
+class TestAskController(BaseTestCase):
+    """AskController integration test stubs"""
 
-    def test_add_bid(self):
-        """Test case for add_bid
+    def test_add_ask(self):
+        """Test case for add_ask
 
-        Add a new bid to the market
+        Add a new ask to the market
         """
-        body = NewBid()
+        body = NewAsk()
         response = self.client.open(
-            '/v1/bids',
+            '/v1/asks',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_del_bid(self):
-        """Test case for del_bid
+    def test_del_ask(self):
+        """Test case for del_ask
 
         
         """
         response = self.client.open(
-            '/v1/bids/{id}'.format(id=789),
+            '/v1/asks/{id}'.format(id=789),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_fok_bid(self):
-        """Test case for fok_bid
+    def test_fok_ask(self):
+        """Test case for fok_ask
 
-        Fill or kill bids
+        Fill or kill asks
         """
-        body = NewBid()
+        body = NewAsk()
         response = self.client.open(
-            '/v1/fok-bids',
+            '/v1/fok-asks',
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_get_bid(self):
-        """Test case for get_bid
+    def test_get_ask(self):
+        """Test case for get_ask
 
         
         """
         response = self.client.open(
-            '/v1/bids/{id}'.format(id=789),
+            '/v1/asks/{id}'.format(id=789),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_list_bids(self):
-        """Test case for list_bids
+    def test_list_asks(self):
+        """Test case for list_asks
 
-        List Bids
+        List Asks
         """
         query_string = [('status', 'available')]
         response = self.client.open(
-            '/v1/bids',
+            '/v1/asks',
             method='GET',
             query_string=query_string)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_update_bid(self):
-        """Test case for update_bid
+    def test_update_ask(self):
+        """Test case for update_ask
 
-        Update an existing bid
+        Update an existing ask
         """
-        body = Bid()
+        body = Ask()
         response = self.client.open(
-            '/v1/bids/{id}'.format(id=789),
+            '/v1/asks/{id}'.format(id=789),
             method='PUT',
             data=json.dumps(body),
             content_type='application/json')
