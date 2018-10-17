@@ -46,6 +46,13 @@ paths:
           - "sold"
           default: "available"
         collectionFormat: "multi"
+      - name: "limit"
+        in: "query"
+        description: "Sets limit for the bids in the response. Min: 1, max: 1000, default: 100"
+        type: "integer"
+        required: false
+        maximum: 1000
+        minimum: 1
       responses:
         200:
           description: "OK"
@@ -56,9 +63,9 @@ paths:
         400:
           description: "Invalid status value"
         default:
-          description: unexpected error
+          description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
     post:
       tags:
       - "bid"
@@ -77,12 +84,16 @@ paths:
       responses:
         201:
           description: "Created"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         405:
           description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -90,7 +101,8 @@ paths:
     get:
       tags:
       - "bid"
-      description: "Returns a user based on a single ID, if the user does not have access to the pet"
+      summary: "Get bid details by ID"
+      description: "Returns a bid based on a single ID"
       operationId: "getBid"
       produces:
         - "application/json"
@@ -113,12 +125,12 @@ paths:
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
     put:
       tags:
       - "bid"
       summary: "Update an existing bid"
-      description: ""
+      description: "Modify bid status only"
       operationId: "updateBid"
       consumes:
       - "application/json"
@@ -131,7 +143,7 @@ paths:
         format: "int64"
       - in: "body"
         name: "body"
-        description: "Bid object that needs to be added to the store"
+        description: "Bid object that needs to be modified"
         required: true
         schema:
           $ref: "#/definitions/Bid"
@@ -140,6 +152,10 @@ paths:
           description: "Updated"
         400:
           description: "Invalid ID supplied"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Bid not found"
         405:
@@ -147,14 +163,15 @@ paths:
         default:
           description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
     delete:
       tags:
       - "bid"
-      description: "deletes a single bet based on the ID supplied"
+      summary: "Deletes and existing bid"
+      description: "Deletes a single bet based on the ID supplied"
       operationId: "delBid"
       parameters:
         - name: "id"
@@ -168,12 +185,16 @@ paths:
           description: "bid deleted"
         400:
           description: "Invalid ID supplied"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Bid not found"
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -196,12 +217,16 @@ paths:
       responses:
         204:
           description: "Deal succeed"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         405:
           description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -228,6 +253,13 @@ paths:
           - "sold"
           default: "available"
         collectionFormat: "multi"
+      - name: "limit"
+        in: "query"
+        description: "Sets limit for the bids in the response. Min: 1, max: 1000, default: 100"
+        type: "integer"
+        required: false
+        maximum: 1000
+        minimum: 1
       responses:
         200:
           description: "OK"
@@ -237,10 +269,14 @@ paths:
               $ref: "#/definitions/Ask"
         400:
           description: "Invalid status value"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         default:
-          description: unexpected error
+          description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
     post:
       tags:
       - "ask"
@@ -259,12 +295,16 @@ paths:
       responses:
         201:
           description: "Created"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         405:
           description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -295,7 +335,7 @@ paths:
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
     put:
       tags:
       - "ask"
@@ -322,6 +362,10 @@ paths:
           description: "Updated"
         400:
           description: "Invalid ID supplied"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Ask not found"
         405:
@@ -329,7 +373,7 @@ paths:
         default:
           description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -350,12 +394,16 @@ paths:
           description: "ask deleted"
         400:
           description: "Invalid ID supplied"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Ask not found"
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -378,12 +426,16 @@ paths:
       responses:
         204:
           description: "Deal succeed"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         405:
           description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
-            $ref: '#/definitions/ErrorModel'
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -496,7 +548,7 @@ definitions:
       password:
         type: "string"
         format: "password"
-  ErrorModel:
+  UnexpectedError:
     required:
       - code
       - message
