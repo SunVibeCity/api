@@ -29,7 +29,7 @@ setup(
     entry_points={
         'console_scripts': ['swagger_server=swagger_server.__main__:main']},
     long_description="""\
-    SunVibe is a Solar Energy Platform where small investors - crowd founders - together finance solar panel installation on the roof of other people’s - roof lenders - house. The installation is constructing by authorized Installers, but the quality assurance and monitoring done by SunVibe.  version: \&quot;0.1.0\&quot; 
+    SunVibe is a Solar Energy Platform where small investors - crowd founders - together finance solar panel installation on the roof of other people’s - roof lenders - house. The installation is constructing by authorized Installers, but the quality assurance and monitoring done by SunVibe. 
     """
 )
 

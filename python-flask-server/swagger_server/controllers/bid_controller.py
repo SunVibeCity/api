@@ -2,8 +2,8 @@ import connexion
 import six
 
 from swagger_server.models.bid import Bid  # noqa: E501
-from swagger_server.models.error_model import ErrorModel  # noqa: E501
 from swagger_server.models.new_bid import NewBid  # noqa: E501
+from swagger_server.models.unexpected_error import UnexpectedError  # noqa: E501
 from swagger_server import util
 
 
@@ -23,11 +23,11 @@ def add_bid(body):  # noqa: E501
 
 
 def del_bid(id):  # noqa: E501
-    """del_bid
+    """Deletes and existing bid
 
-    deletes a single bet based on the ID supplied # noqa: E501
+    Deletes a single bet based on the ID supplied # noqa: E501
 
-    :param id: ID of bid to delete
+    :param id: ID of the object to fetch
     :type id: int
 
     :rtype: None
@@ -51,11 +51,11 @@ def fok_bid(body):  # noqa: E501
 
 
 def get_bid(id):  # noqa: E501
-    """get_bid
+    """Get bid details by ID
 
-    Returns a user based on a single ID, if the user does not have access to the pet # noqa: E501
+    Returns a bid based on a single ID # noqa: E501
 
-    :param id: ID of bid to fetch
+    :param id: ID of the object to fetch
     :type id: int
 
     :rtype: Bid
@@ -63,13 +63,17 @@ def get_bid(id):  # noqa: E501
     return 'do some magic!'
 
 
-def list_bids(status=None):  # noqa: E501
+def list_bids(status=None, offset=None, limit=None):  # noqa: E501
     """List Bids
 
     Multiple status values can be provided with comma separated strings # noqa: E501
 
     :param status: Status values that need to be considered for filter
     :type status: List[str]
+    :param offset: The number of items to skip before starting to collect the result set.
+    :type offset: int
+    :param limit: The numbers of items to return.
+    :type limit: int
 
     :rtype: List[Bid]
     """
@@ -79,11 +83,11 @@ def list_bids(status=None):  # noqa: E501
 def update_bid(id, body):  # noqa: E501
     """Update an existing bid
 
-     # noqa: E501
+    Modify bid status only # noqa: E501
 
-    :param id: ID of bid to fetch
+    :param id: ID of the object to fetch
     :type id: int
-    :param body: Bid object that needs to be added to the store
+    :param body: Bid object that needs to be modified
     :type body: dict | bytes
 
     :rtype: None

@@ -6,8 +6,8 @@ from flask import json
 from six import BytesIO
 
 from swagger_server.models.ask import Ask  # noqa: E501
-from swagger_server.models.error_model import ErrorModel  # noqa: E501
 from swagger_server.models.new_ask import NewAsk  # noqa: E501
+from swagger_server.models.unexpected_error import UnexpectedError  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
@@ -69,7 +69,9 @@ class TestAskController(BaseTestCase):
 
         List Asks
         """
-        query_string = [('status', 'available')]
+        query_string = [('status', 'available'),
+                        ('offset', 1),
+                        ('limit', 1000)]
         response = self.client.open(
             '/v1/asks',
             method='GET',

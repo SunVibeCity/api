@@ -6,8 +6,8 @@ from flask import json
 from six import BytesIO
 
 from swagger_server.models.bid import Bid  # noqa: E501
-from swagger_server.models.error_model import ErrorModel  # noqa: E501
 from swagger_server.models.new_bid import NewBid  # noqa: E501
+from swagger_server.models.unexpected_error import UnexpectedError  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
@@ -31,7 +31,7 @@ class TestBidController(BaseTestCase):
     def test_del_bid(self):
         """Test case for del_bid
 
-        
+        Deletes and existing bid
         """
         response = self.client.open(
             '/v1/bids/{id}'.format(id=789),
@@ -56,7 +56,7 @@ class TestBidController(BaseTestCase):
     def test_get_bid(self):
         """Test case for get_bid
 
-        
+        Get bid details by ID
         """
         response = self.client.open(
             '/v1/bids/{id}'.format(id=789),
@@ -69,7 +69,9 @@ class TestBidController(BaseTestCase):
 
         List Bids
         """
-        query_string = [('status', 'available')]
+        query_string = [('status', 'available'),
+                        ('offset', 1),
+                        ('limit', 1000)]
         response = self.client.open(
             '/v1/bids',
             method='GET',

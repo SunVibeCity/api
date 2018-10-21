@@ -2,10 +2,9 @@
 swagger: "2.0"
 info:
   description: "SunVibe is a Solar Energy Platform where small investors - crowd founders\
-    \ - together finance solar panel\ninstallation on the roof of other people’s -\
+    \ - together finance solar panel installation on the roof of other people’s -\
     \ roof lenders - house.\nThe installation is constructing by authorized Installers,\
-    \ but the quality assurance and monitoring done by SunVibe.  version: \"0.1.0\"\
-    \n"
+    \ but the quality assurance and monitoring done by SunVibe.\n"
   version: "0.1.0"
   title: "SunVibe API"
   termsOfService: "http://sunvibe.vn/terms"
@@ -18,10 +17,17 @@ host: "api.sunvibe.vn"
 basePath: "/v1"
 tags:
 - name: "bid"
-  description: "Bid operations"
+  description: "Bid operations on SunVibeToken marketplace"
   externalDocs:
     description: "Find out more about our web site"
     url: "http://sunvibe.vn/investor"
+- name: "ask"
+  description: "Ask operations on SunVibeToken marketplace"
+  externalDocs:
+    description: "Find out more about our web site"
+    url: "http://sunvibe.vn/investor"
+- name: "user"
+  description: "User operations, sign-in, log-in, list etc."
 schemes:
 - "http"
 paths:
@@ -48,6 +54,21 @@ paths:
           - "pending"
           - "sold"
         collectionFormat: "multi"
+      - name: "offset"
+        in: "query"
+        description: "The number of items to skip before starting to collect the result\
+          \ set."
+        required: false
+        type: "integer"
+        minimum: 0
+      - name: "limit"
+        in: "query"
+        description: "The numbers of items to return."
+        required: false
+        type: "integer"
+        default: 100
+        maximum: 1000
+        minimum: 1
       responses:
         200:
           description: "OK"
@@ -56,11 +77,11 @@ paths:
             items:
               $ref: "#/definitions/Bid"
         400:
-          description: "Invalid status value"
+          description: "Invalid request message"
         default:
-          description: "unexpected error"
+          description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       x-swagger-router-controller: "swagger_server.controllers.bid_controller"
     post:
       tags:
@@ -79,13 +100,22 @@ paths:
           $ref: "#/definitions/NewBid"
       responses:
         201:
-          description: "Created"
-        405:
-          description: "Invalid input"
+          description: "New bid was added to the market successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new bid"
+              default: "/bisd/1"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         default:
           description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -94,15 +124,15 @@ paths:
     get:
       tags:
       - "bid"
-      description: "Returns a user based on a single ID, if the user does not have\
-        \ access to the pet"
+      summary: "Get bid details by ID"
+      description: "Returns a bid based on a single ID"
       operationId: "get_bid"
       produces:
       - "application/json"
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of bid to fetch"
+        description: "ID of the object to fetch"
         required: true
         type: "integer"
         format: "int64"
@@ -112,32 +142,32 @@ paths:
           schema:
             $ref: "#/definitions/Bid"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         404:
           description: "Bid not found"
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       x-swagger-router-controller: "swagger_server.controllers.bid_controller"
     put:
       tags:
       - "bid"
       summary: "Update an existing bid"
-      description: ""
+      description: "Modify bid status only"
       operationId: "update_bid"
       consumes:
       - "application/json"
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of bid to fetch"
+        description: "ID of the object to fetch"
         required: true
         type: "integer"
         format: "int64"
       - in: "body"
         name: "body"
-        description: "Bid object that needs to be added to the store"
+        description: "Bid object that needs to be modified"
         required: true
         schema:
           $ref: "#/definitions/Bid"
@@ -145,15 +175,17 @@ paths:
         201:
           description: "Updated"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Bid not found"
-        405:
-          description: "Validation exception"
         default:
           description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -161,12 +193,13 @@ paths:
     delete:
       tags:
       - "bid"
-      description: "deletes a single bet based on the ID supplied"
+      summary: "Deletes and existing bid"
+      description: "Deletes a single bet based on the ID supplied"
       operationId: "del_bid"
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of bid to delete"
+        description: "ID of the object to fetch"
         required: true
         type: "integer"
         format: "int64"
@@ -174,13 +207,17 @@ paths:
         204:
           description: "bid deleted"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Bid not found"
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -204,12 +241,16 @@ paths:
       responses:
         204:
           description: "Deal succeed"
-        405:
-          description: "Invalid input"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         default:
           description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -237,6 +278,21 @@ paths:
           - "pending"
           - "sold"
         collectionFormat: "multi"
+      - name: "offset"
+        in: "query"
+        description: "The number of items to skip before starting to collect the result\
+          \ set."
+        required: false
+        type: "integer"
+        minimum: 0
+      - name: "limit"
+        in: "query"
+        description: "The numbers of items to return."
+        required: false
+        type: "integer"
+        default: 100
+        maximum: 1000
+        minimum: 1
       responses:
         200:
           description: "OK"
@@ -245,11 +301,15 @@ paths:
             items:
               $ref: "#/definitions/Ask"
         400:
-          description: "Invalid status value"
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         default:
-          description: "unexpected error"
+          description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       x-swagger-router-controller: "swagger_server.controllers.ask_controller"
     post:
       tags:
@@ -268,13 +328,21 @@ paths:
           $ref: "#/definitions/NewAsk"
       responses:
         201:
-          description: "Created"
-        405:
-          description: "Invalid input"
+          description: "New ask was added to the market successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new ask"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         default:
           description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -291,7 +359,7 @@ paths:
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of ask to fetch"
+        description: "ID of the object to fetch"
         required: true
         type: "integer"
         format: "int64"
@@ -301,13 +369,13 @@ paths:
           schema:
             $ref: "#/definitions/Ask"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         404:
           description: "Ask not found"
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       x-swagger-router-controller: "swagger_server.controllers.ask_controller"
     put:
       tags:
@@ -320,7 +388,7 @@ paths:
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of ask to fetch"
+        description: "ID of the object to fetch"
         required: true
         type: "integer"
         format: "int64"
@@ -334,15 +402,17 @@ paths:
         201:
           description: "Updated"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Ask not found"
-        405:
-          description: "Validation exception"
         default:
           description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -355,7 +425,7 @@ paths:
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of ask to delete"
+        description: "ID of the object to fetch"
         required: true
         type: "integer"
         format: "int64"
@@ -363,13 +433,17 @@ paths:
         204:
           description: "ask deleted"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         404:
           description: "Ask not found"
         default:
           description: "unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
@@ -393,16 +467,280 @@ paths:
       responses:
         204:
           description: "Deal succeed"
-        405:
-          description: "Invalid input"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
         default:
           description: "Unexpected error"
           schema:
-            $ref: "#/definitions/ErrorModel"
+            $ref: "#/definitions/UnexpectedError"
       security:
       - OAuth2:
         - "investor"
       x-swagger-router-controller: "swagger_server.controllers.ask_controller"
+  /users:
+    get:
+      tags:
+      - "user"
+      summary: "Returns all users in the database."
+      description: "Only the admin can access this."
+      operationId: "list_users"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "offset"
+        in: "query"
+        description: "The number of items to skip before starting to collect the result\
+          \ set."
+        required: false
+        type: "integer"
+        minimum: 0
+      - name: "limit"
+        in: "query"
+        description: "The numbers of items to return."
+        required: false
+        type: "integer"
+        default: 100
+        maximum: 1000
+        minimum: 1
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "admin"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    post:
+      tags:
+      - "user"
+      summary: "Creates a new user"
+      description: "Only the admin user can create users."
+      operationId: "add_user"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The user account to create"
+        required: true
+        schema:
+          $ref: "#/definitions/NewUser"
+      responses:
+        201:
+          description: "New user was created successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new user"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "admin"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /users/{id}:
+    get:
+      tags:
+      - "user"
+      summary: "Retrieves a user"
+      description: "Users can only retrieve their own account, except for the admin,\
+        \ who can retrieve anyone."
+      operationId: "get_user"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the object to fetch"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid request message"
+        404:
+          description: "Ask not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "registered"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    put:
+      tags:
+      - "user"
+      summary: "Update a user"
+      description: "Users can only update their own account, except the admin, who\
+        \ can edit anyone."
+      operationId: "update_user"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the object to fetch"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "The user account to create"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "Updated"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "Ask not found"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "registered"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+    delete:
+      tags:
+      - "user"
+      summary: "Deletes a user"
+      description: "Users can only delete their own account, admin can delete everyone\
+        \ else."
+      operationId: "del_user"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the object to fetch"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        204:
+          description: "User deleted"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "User not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "investor"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /users/login:
+    post:
+      tags:
+      - "user"
+      summary: "Logs in already registered users and admin"
+      description: ""
+      operationId: "user_login"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The login credentials"
+        required: true
+        schema:
+          $ref: "#/definitions/LoginUser"
+      responses:
+        200:
+          description: "Login was successful"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+          headers:
+            Set-Cookie:
+              type: "string"
+              description: "The session cookie"
+              default: "SESSIONID=123456789012345678901234567890; Path=/; HttpOnly"
+        401:
+          description: "Not authenticated"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /users/{id}/logout:
+    post:
+      tags:
+      - "user"
+      summary: "Logs out the given user"
+      description: "Users can only log themselves out, admin can log-out anyone."
+      operationId: "user_logout"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the object to fetch"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        204:
+          description: "Logout was successful"
+          headers:
+            Set-Cookie:
+              type: "string"
+              description: "Deletes the session cookie for self logout"
+              default: "SESSIONID=; Expires=Thu, 01-Jan-1970 00:00:01 GMT; Path=/"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "User not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
 securityDefinitions:
   BasicAuth:
     type: "basic"
@@ -416,8 +754,9 @@ securityDefinitions:
     tokenUrl: "https://sunvibe.vn/oauth/token"
     flow: "accessCode"
     scopes:
-      investor: "Grants investor access"
-      admin: "Grants access to administrative information"
+      investor: "Grants investor access. Users with confirmed registration."
+      registered: "Grants registered user access."
+      admin: "Grants access to administrative information."
 definitions:
   NewBid:
     type: "object"
@@ -503,22 +842,42 @@ definitions:
         modified:
           type: "string"
           format: "date-time"
-  Investor:
+  LoginUser:
     type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-      phone:
-        type: "string"
-      email:
+      username:
         type: "string"
       password:
         type: "string"
         format: "password"
-  ErrorModel:
+    example:
+      password: "password"
+      username: "username"
+  NewUser:
+    allOf:
+    - $ref: "#/definitions/LoginUser"
+    - properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        phone:
+          type: "string"
+        email:
+          type: "string"
+  User:
+    allOf:
+    - $ref: "#/definitions/NewUser"
+    - properties:
+        password:
+          type: "string"
+          format: "password"
+  Investor:
+    allOf:
+    - $ref: "#/definitions/User"
+    - {}
+  UnexpectedError:
     required:
     - "code"
     - "message"
@@ -528,6 +887,39 @@ definitions:
         format: "int32"
       message:
         type: "string"
+  inline_response_200:
+    properties:
+      sessionid:
+        type: "string"
+        description: "API or Session key."
+        default: "123456789012345678901234567890"
+    example:
+      sessionid: "123456789012345678901234567890"
+parameters:
+  offsetParam:
+    name: "offset"
+    in: "query"
+    description: "The number of items to skip before starting to collect the result\
+      \ set."
+    required: false
+    type: "integer"
+    minimum: 0
+  limitParam:
+    name: "limit"
+    in: "query"
+    description: "The numbers of items to return."
+    required: false
+    type: "integer"
+    default: 100
+    maximum: 1000
+    minimum: 1
+  idParam:
+    name: "id"
+    in: "path"
+    description: "ID of the object to fetch"
+    required: true
+    type: "integer"
+    format: "int64"
 externalDocs:
   description: "Find out more about SunVibe"
   url: "http://sunvibe.vn"

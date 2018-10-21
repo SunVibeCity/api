@@ -1,9 +1,9 @@
 swagger: "2.0"
 info:
   description: |
-    SunVibe is a Solar Energy Platform where small investors - crowd founders - together finance solar panel
-    installation on the roof of other people’s - roof lenders - house.
-    The installation is constructing by authorized Installers, but the quality assurance and monitoring done by SunVibe.  version: "0.1.0"
+    SunVibe is a Solar Energy Platform where small investors - crowd founders - together finance solar panel installation on the roof of other people’s - roof lenders - house.
+    The installation is constructing by authorized Installers, but the quality assurance and monitoring done by SunVibe.
+  version: "0.1.0"
   title: "SunVibe API"
   termsOfService: "http://sunvibe.vn/terms"
   contact:
@@ -11,15 +11,21 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-  version: "0.1.0"
 host: "api.sunvibe.vn"
 basePath: "/v1"
 tags:
 - name: "bid"
-  description: "Bid operations"
+  description: "Bid operations on SunVibeToken marketplace"
   externalDocs:
     description: "Find out more about our web site"
     url: "http://sunvibe.vn/investor"
+- name: "ask"
+  description: "Ask operations on SunVibeToken marketplace"
+  externalDocs:
+    description: "Find out more about our web site"
+    url: "http://sunvibe.vn/investor"
+- name: "user"
+  description: "User operations, sign-in, log-in, list etc."
 schemes:
 - "http"
 paths:
@@ -46,13 +52,8 @@ paths:
           - "sold"
           default: "available"
         collectionFormat: "multi"
-      - name: "limit"
-        in: "query"
-        description: "Sets limit for the bids in the response. Min: 1, max: 1000, default: 100"
-        type: "integer"
-        required: false
-        maximum: 1000
-        minimum: 1
+      - $ref: "#/parameters/offsetParam"
+      - $ref: "#/parameters/limitParam"
       responses:
         200:
           description: "OK"
@@ -61,7 +62,7 @@ paths:
             items:
               $ref: "#/definitions/Bid"
         400:
-          description: "Invalid status value"
+          description: "Invalid request message"
         default:
           description: "Unexpected error"
           schema:
@@ -83,13 +84,18 @@ paths:
           $ref: "#/definitions/NewBid"
       responses:
         201:
-          description: "Created"
+          description: "New bid was added to the market successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new bid"
+              default: "/bisd/1"
+        400:
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
           description: "Out of scope"
-        405:
-          description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
@@ -107,19 +113,14 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "id"
-          in: "path"
-          description: "ID of bid to fetch"
-          required: true
-          type: "integer"
-          format: "int64"
+      - $ref: "#/parameters/idParam"
       responses:
         "200":
           description: "OK"
           schema:
             $ref: "#/definitions/Bid"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         404:
           description: "Bid not found"
         default:
@@ -135,12 +136,7 @@ paths:
       consumes:
       - "application/json"
       parameters:
-      - name: "id"
-        in: "path"
-        description: "ID of bid to fetch"
-        required: true
-        type: "integer"
-        format: "int64"
+      - $ref: "#/parameters/idParam"
       - in: "body"
         name: "body"
         description: "Bid object that needs to be modified"
@@ -151,15 +147,13 @@ paths:
         201:
           description: "Updated"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
           description: "Out of scope"
         404:
           description: "Bid not found"
-        405:
-          description: "Validation exception"
         default:
           description: "Unexpected error"
           schema:
@@ -174,17 +168,12 @@ paths:
       description: "Deletes a single bet based on the ID supplied"
       operationId: "delBid"
       parameters:
-        - name: "id"
-          in: "path"
-          description: "ID of bid to delete"
-          required: true
-          type: "integer"
-          format: "int64"
+      - $ref: "#/parameters/idParam"
       responses:
         "204":
           description: "bid deleted"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
@@ -217,12 +206,12 @@ paths:
       responses:
         204:
           description: "Deal succeed"
+        400:
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
           description: "Out of scope"
-        405:
-          description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
@@ -253,13 +242,8 @@ paths:
           - "sold"
           default: "available"
         collectionFormat: "multi"
-      - name: "limit"
-        in: "query"
-        description: "Sets limit for the bids in the response. Min: 1, max: 1000, default: 100"
-        type: "integer"
-        required: false
-        maximum: 1000
-        minimum: 1
+      - $ref: "#/parameters/offsetParam"
+      - $ref: "#/parameters/limitParam"
       responses:
         200:
           description: "OK"
@@ -268,7 +252,7 @@ paths:
             items:
               $ref: "#/definitions/Ask"
         400:
-          description: "Invalid status value"
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
@@ -294,13 +278,17 @@ paths:
           $ref: "#/definitions/NewAsk"
       responses:
         201:
-          description: "Created"
+          description: "New ask was added to the market successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new ask"
+        400:
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
           description: "Out of scope"
-        405:
-          description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
@@ -317,19 +305,14 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: "id"
-          in: "path"
-          description: "ID of ask to fetch"
-          required: true
-          type: "integer"
-          format: "int64"
+      - $ref: "#/parameters/idParam"
       responses:
-        "200":
+        200:
           description: "OK"
           schema:
             $ref: "#/definitions/Ask"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         404:
           description: "Ask not found"
         default:
@@ -345,12 +328,7 @@ paths:
       consumes:
       - "application/json"
       parameters:
-      - name: "id"
-        in: "path"
-        description: "ID of ask to fetch"
-        required: true
-        type: "integer"
-        format: "int64"
+      - $ref: "#/parameters/idParam"
       - in: "body"
         name: "body"
         description: "Ask object that needs to be added to the store"
@@ -361,15 +339,13 @@ paths:
         201:
           description: "Updated"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
           description: "Out of scope"
         404:
           description: "Ask not found"
-        405:
-          description: "Validation exception"
         default:
           description: "Unexpected error"
           schema:
@@ -383,17 +359,12 @@ paths:
       description: "deletes a single bet based on the ID supplied"
       operationId: "delAsk"
       parameters:
-        - name: "id"
-          in: "path"
-          description: "ID of ask to delete"
-          required: true
-          type: "integer"
-          format: "int64"
+      - $ref: "#/parameters/idParam"
       responses:
-        "204":
+        204:
           description: "ask deleted"
         400:
-          description: "Invalid ID supplied"
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
@@ -426,12 +397,12 @@ paths:
       responses:
         204:
           description: "Deal succeed"
+        400:
+          description: "Invalid request message"
         401:
           description: "Not authenticated"
         403:
           description: "Out of scope"
-        405:
-          description: "Invalid input"
         default:
           description: "Unexpected error"
           schema:
@@ -439,24 +410,271 @@ paths:
       security:
       - OAuth2:
         - "investor"
+  /users:
+    get:
+      tags:
+      - "user"
+      summary: "Returns all users in the database."
+      description: "Only the admin can access this."
+      operationId: "listUsers"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/offsetParam"
+      - $ref: "#/parameters/limitParam"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "admin"
+    post:
+      tags:
+      - "user"
+      summary: "Creates a new user"
+      description: "Only the admin user can create users."
+      operationId: "addUser"
+      consumes:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/NewUser"
+          description: "The user account to create"
+      responses:
+        201:
+          description: "New user was created successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new user"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "admin"
+  /users/{id}:
+    get:
+      tags:
+      - "user"
+      summary: "Retrieves a user"
+      description: "Users can only retrieve their own account, except for the admin, who can retrieve anyone."
+      operationId: "getUser"
+      produces:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid request message"
+        404:
+          description: "Ask not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "registered"
+    put:
+      tags:
+      - "user"
+      summary: "Update a user"
+      description: "Users can only update their own account, except the admin, who can edit anyone."
+      operationId: "updateUser"
+      consumes:
+        - "application/json"
+      parameters:
+        - $ref: "#/parameters/idParam"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+          description: "The user account to create"
+      responses:
+        201:
+          description: "Updated"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "Ask not found"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "registered"
+    delete:
+      tags:
+      - "user"
+      summary: "Deletes a user"
+      description: "Users can only delete their own account, admin can delete everyone else."
+      operationId: "delUser"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      responses:
+        204:
+          description: "User deleted"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "User not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      security:
+      - OAuth2:
+        - "investor"
+  /users/login:
+    post:
+      tags:
+      - "user"
+      summary: "Logs in already registered users and admin"
+      description: ""
+      operationId: "userLogin"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "The login credentials"
+          schema:
+            $ref: "#/definitions/LoginUser"
+      responses:
+        200:
+          description: "Login was successful"
+          schema:
+            type: "object"
+            properties:
+              sessionid:
+                type: "string"
+                description: "API or Session key."
+                default: "123456789012345678901234567890"
+          headers:
+            Set-Cookie:
+              type: "string"
+              description: "The session cookie"
+              default: "SESSIONID=123456789012345678901234567890; Path=/; HttpOnly"
+        401:
+          description: "Not authenticated"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+  /users/{id}/logout:
+    post:
+      tags:
+      - "user"
+      summary: "Logs out the given user"
+      description: "Users can only log themselves out, admin can log-out anyone."
+      operationId: "userLogout"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      responses:
+        204:
+          description: "Logout was successful"
+          headers:
+            Set-Cookie:
+              type: "string"
+              description: "Deletes the session cookie for self logout"
+              default: "SESSIONID=; Expires=Thu, 01-Jan-1970 00:00:01 GMT; Path=/"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "User not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+parameters:
+  offsetParam:
+    in: "query"
+    name: "offset"
+    required: false
+    type: "integer"
+    minimum: 0
+    description: "The number of items to skip before starting to collect the result set."
+  limitParam:
+    in: "query"
+    name: "limit"
+    required: false
+    type: "integer"
+    minimum: 1
+    maximum: 1000
+    default: 100
+    description: "The numbers of items to return."
+  idParam:
+    in: "path"
+    name: "id"
+    description: "ID of the object to fetch"
+    required: true
+    type: "integer"
+    format: "int64"
 securityDefinitions:
   BasicAuth:
-    type: basic
+    type: "basic"
   ApiKeyAuth:
-    type: apiKey
-    in: header
-    name: X-API-Key
+    type: "apiKey"
+    in: "header"
+    name: "X-API-Key"
   OAuth2:
-    type: oauth2
-    flow: accessCode
-    authorizationUrl: https://sunvibe.vn/oauth/authorize
-    tokenUrl: https://sunvibe.vn/oauth/token
+    type: "oauth2"
+    flow: "accessCode"
+    authorizationUrl: "https://sunvibe.vn/oauth/authorize"
+    tokenUrl: "https://sunvibe.vn/oauth/token"
     scopes:
-      investor: Grants investor access
-      admin: Grants access to administrative information
+      investor: "Grants investor access. Users with confirmed registration."
+      registered: "Grants registered user access."
+      admin: "Grants access to administrative information."
 definitions:
   NewBid:
-    type: object
+    type: "object"
     properties:
       quantity:
         type: "integer"
@@ -465,8 +683,8 @@ definitions:
         type: "integer"
         format: "int64"
     required:
-      - quantity
-      - price
+      - "quantity"
+      - "price"
   Bid:
     allOf:
       - $ref: '#/definitions/NewBid'
@@ -493,9 +711,9 @@ definitions:
             type: "string"
             format: "date-time"
         required:
-          - id
+          - "id"
   NewAsk:
-    type: object
+    type: "object"
     properties:
       quantity:
         type: "integer"
@@ -504,8 +722,8 @@ definitions:
         type: "integer"
         format: "int64"
     required:
-      - quantity
-      - price
+      - "quantity"
+      - "price"
   Ask:
     allOf:
       - $ref: '#/definitions/NewAsk'
@@ -532,32 +750,48 @@ definitions:
             type: "string"
             format: "date-time"
         required:
-          - id
-  Investor:
-    type: object
+          - "id"
+  LoginUser:
+    type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-      phone:
-        type: "string"
-      email:
+      username:
         type: "string"
       password:
         type: "string"
         format: "password"
+  NewUser:
+    allOf:
+      - $ref: '#/definitions/LoginUser'
+      - properties:
+          id:
+            type: "integer"
+            format: "int64"
+          name:
+            type: "string"
+          phone:
+            type: "string"
+          email:
+            type: "string"
+  User:
+    allOf:
+      - $ref: '#/definitions/NewUser'
+      - properties:
+          password:
+            type: "string"
+            format: "password"
+  Investor:
+    allOf:
+      - $ref: '#/definitions/User'
   UnexpectedError:
     required:
-      - code
-      - message
+      - "code"
+      - "message"
     properties:
       code:
-        type: integer
-        format: int32
+        type: "integer"
+        format: "int32"
       message:
-        type: string
+        type: "string"
 externalDocs:
   description: "Find out more about SunVibe"
   url: "http://sunvibe.vn"

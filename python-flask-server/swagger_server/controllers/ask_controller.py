@@ -2,8 +2,8 @@ import connexion
 import six
 
 from swagger_server.models.ask import Ask  # noqa: E501
-from swagger_server.models.error_model import ErrorModel  # noqa: E501
 from swagger_server.models.new_ask import NewAsk  # noqa: E501
+from swagger_server.models.unexpected_error import UnexpectedError  # noqa: E501
 from swagger_server import util
 
 
@@ -27,7 +27,7 @@ def del_ask(id):  # noqa: E501
 
     deletes a single bet based on the ID supplied # noqa: E501
 
-    :param id: ID of ask to delete
+    :param id: ID of the object to fetch
     :type id: int
 
     :rtype: None
@@ -55,7 +55,7 @@ def get_ask(id):  # noqa: E501
 
     Returns a user based on a single ID, if the user does not have access to the pet # noqa: E501
 
-    :param id: ID of ask to fetch
+    :param id: ID of the object to fetch
     :type id: int
 
     :rtype: Ask
@@ -63,13 +63,17 @@ def get_ask(id):  # noqa: E501
     return 'do some magic!'
 
 
-def list_asks(status=None):  # noqa: E501
+def list_asks(status=None, offset=None, limit=None):  # noqa: E501
     """List Asks
 
     Multiple status values can be provided with comma separated strings # noqa: E501
 
     :param status: Status values that need to be considered for filter
     :type status: List[str]
+    :param offset: The number of items to skip before starting to collect the result set.
+    :type offset: int
+    :param limit: The numbers of items to return.
+    :type limit: int
 
     :rtype: List[Ask]
     """
@@ -81,7 +85,7 @@ def update_ask(id, body):  # noqa: E501
 
      # noqa: E501
 
-    :param id: ID of ask to fetch
+    :param id: ID of the object to fetch
     :type id: int
     :param body: Ask object that needs to be added to the store
     :type body: dict | bytes
