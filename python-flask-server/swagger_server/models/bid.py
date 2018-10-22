@@ -17,17 +17,17 @@ class Bid(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, quantity: int=None, price: int=None, id: int=None, bidder: Investor=None, status: str=None, active: bool=True, created: datetime=None, modified: datetime=None):  # noqa: E501
+    def __init__(self, quantity: int=None, price: int=None, bidder: Investor=None, id: int=None, status: str=None, active: bool=True, created: datetime=None, modified: datetime=None):  # noqa: E501
         """Bid - a model defined in Swagger
 
         :param quantity: The quantity of this Bid.  # noqa: E501
         :type quantity: int
         :param price: The price of this Bid.  # noqa: E501
         :type price: int
-        :param id: The id of this Bid.  # noqa: E501
-        :type id: int
         :param bidder: The bidder of this Bid.  # noqa: E501
         :type bidder: Investor
+        :param id: The id of this Bid.  # noqa: E501
+        :type id: int
         :param status: The status of this Bid.  # noqa: E501
         :type status: str
         :param active: The active of this Bid.  # noqa: E501
@@ -40,8 +40,8 @@ class Bid(Model):
         self.swagger_types = {
             'quantity': int,
             'price': int,
-            'id': int,
             'bidder': Investor,
+            'id': int,
             'status': str,
             'active': bool,
             'created': datetime,
@@ -51,8 +51,8 @@ class Bid(Model):
         self.attribute_map = {
             'quantity': 'quantity',
             'price': 'price',
-            'id': 'id',
             'bidder': 'bidder',
+            'id': 'id',
             'status': 'status',
             'active': 'active',
             'created': 'created',
@@ -61,8 +61,8 @@ class Bid(Model):
 
         self._quantity = quantity
         self._price = price
-        self._id = id
         self._bidder = bidder
+        self._id = id
         self._status = status
         self._active = active
         self._created = created
@@ -126,6 +126,27 @@ class Bid(Model):
         self._price = price
 
     @property
+    def bidder(self) -> Investor:
+        """Gets the bidder of this Bid.
+
+
+        :return: The bidder of this Bid.
+        :rtype: Investor
+        """
+        return self._bidder
+
+    @bidder.setter
+    def bidder(self, bidder: Investor):
+        """Sets the bidder of this Bid.
+
+
+        :param bidder: The bidder of this Bid.
+        :type bidder: Investor
+        """
+
+        self._bidder = bidder
+
+    @property
     def id(self) -> int:
         """Gets the id of this Bid.
 
@@ -147,27 +168,6 @@ class Bid(Model):
             raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
-
-    @property
-    def bidder(self) -> Investor:
-        """Gets the bidder of this Bid.
-
-
-        :return: The bidder of this Bid.
-        :rtype: Investor
-        """
-        return self._bidder
-
-    @bidder.setter
-    def bidder(self, bidder: Investor):
-        """Sets the bidder of this Bid.
-
-
-        :param bidder: The bidder of this Bid.
-        :type bidder: Investor
-        """
-
-        self._bidder = bidder
 
     @property
     def status(self) -> str:

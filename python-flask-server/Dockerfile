@@ -11,6 +11,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
 
+ENV PYTHONPATH="/usr/src/app":$PYTHONPATH
+
 ENTRYPOINT ["python3"]
 
 CMD ["-m", "swagger_server"]

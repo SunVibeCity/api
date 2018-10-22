@@ -13,7 +13,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "api.sunvibe.vn"
+host: "localhost:8080"
 basePath: "/v1"
 tags:
 - name: "bid"
@@ -87,14 +87,15 @@ paths:
       tags:
       - "bid"
       summary: "Add a new bid to the market"
-      description: "Add token buying offering"
+      description: "Add a token buying offer to the marketplace. "
       operationId: "add_bid"
       consumes:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "Bid object that needs to be added to the market"
+        description: "Bid object that needs to be added to the market\nquantity is\
+          \ the amount of token and price is VND price of one token"
         required: true
         schema:
           $ref: "#/definitions/NewBid"
@@ -770,8 +771,11 @@ definitions:
       price:
         type: "integer"
         format: "int64"
+      bidder:
+        $ref: "#/definitions/Investor"
     example:
       quantity: 0
+      bidder: ""
       price: 6
   Bid:
     allOf:
@@ -782,8 +786,6 @@ definitions:
         id:
           type: "integer"
           format: "int64"
-        bidder:
-          $ref: "#/definitions/Investor"
         status:
           type: "string"
           description: "Bid Status"
@@ -812,7 +814,10 @@ definitions:
       price:
         type: "integer"
         format: "int64"
+      seller:
+        $ref: "#/definitions/Investor"
     example:
+      seller: ""
       quantity: 0
       price: 6
   Ask:
@@ -824,8 +829,6 @@ definitions:
         id:
           type: "integer"
           format: "int64"
-        seller:
-          $ref: "#/definitions/Investor"
         status:
           type: "string"
           description: "Bid Status"

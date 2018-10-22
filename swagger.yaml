@@ -1,8 +1,9 @@
 swagger: "2.0"
 info:
-  description: |
-    SunVibe is a Solar Energy Platform where small investors - crowd founders - together finance solar panel installation on the roof of other people’s - roof lenders - house.
-    The installation is constructing by authorized Installers, but the quality assurance and monitoring done by SunVibe.
+  description: "SunVibe is a Solar Energy Platform where small investors - crowd founders\
+    \ - together finance solar panel installation on the roof of other people’s -\
+    \ roof lenders - house.\nThe installation is constructing by authorized Installers,\
+    \ but the quality assurance and monitoring done by SunVibe.\n"
   version: "0.1.0"
   title: "SunVibe API"
   termsOfService: "http://sunvibe.vn/terms"
@@ -11,7 +12,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "api.sunvibe.vn"
+host: "localhost:8080"
 basePath: "/v1"
 tags:
 - name: "bid"
@@ -48,7 +49,6 @@ paths:
           type: "string"
           enum:
           - "available"
-          - "pending"
           - "sold"
           default: "available"
         collectionFormat: "multi"
@@ -71,14 +71,15 @@ paths:
       tags:
       - "bid"
       summary: "Add a new bid to the market"
-      description: "Add token buying offering"
+      description: "Add a token buying offer to the marketplace. "
       operationId: "addBid"
       consumes:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "Bid object that needs to be added to the market"
+        description: "Bid object that needs to be added to the market\nquantity is the amount of token and\
+          \ price is VND price of one token"
         required: true
         schema:
           $ref: "#/definitions/NewBid"
@@ -238,7 +239,6 @@ paths:
           type: "string"
           enum:
           - "available"
-          - "pending"
           - "sold"
           default: "available"
         collectionFormat: "multi"
@@ -682,6 +682,8 @@ definitions:
       price:
         type: "integer"
         format: "int64"
+      bidder:
+        $ref: '#/definitions/Investor'
     required:
       - "quantity"
       - "price"
@@ -692,8 +694,6 @@ definitions:
           id:
             type: "integer"
             format: "int64"
-          bidder:
-            $ref: '#/definitions/Investor'
           status:
             type: "string"
             description: "Bid Status"
@@ -721,6 +721,8 @@ definitions:
       price:
         type: "integer"
         format: "int64"
+      seller:
+        $ref: '#/definitions/Investor'
     required:
       - "quantity"
       - "price"
@@ -731,8 +733,6 @@ definitions:
           id:
             type: "integer"
             format: "int64"
-          seller:
-            $ref: '#/definitions/Investor'
           status:
             type: "string"
             description: "Bid Status"

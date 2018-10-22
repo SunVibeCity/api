@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.investor import Investor  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,26 +16,31 @@ class NewBid(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, quantity: int=None, price: int=None):  # noqa: E501
+    def __init__(self, quantity: int=None, price: int=None, bidder: Investor=None):  # noqa: E501
         """NewBid - a model defined in Swagger
 
         :param quantity: The quantity of this NewBid.  # noqa: E501
         :type quantity: int
         :param price: The price of this NewBid.  # noqa: E501
         :type price: int
+        :param bidder: The bidder of this NewBid.  # noqa: E501
+        :type bidder: Investor
         """
         self.swagger_types = {
             'quantity': int,
-            'price': int
+            'price': int,
+            'bidder': Investor
         }
 
         self.attribute_map = {
             'quantity': 'quantity',
-            'price': 'price'
+            'price': 'price',
+            'bidder': 'bidder'
         }
 
         self._quantity = quantity
         self._price = price
+        self._bidder = bidder
 
     @classmethod
     def from_dict(cls, dikt) -> 'NewBid':
@@ -92,3 +98,24 @@ class NewBid(Model):
             raise ValueError("Invalid value for `price`, must not be `None`")  # noqa: E501
 
         self._price = price
+
+    @property
+    def bidder(self) -> Investor:
+        """Gets the bidder of this NewBid.
+
+
+        :return: The bidder of this NewBid.
+        :rtype: Investor
+        """
+        return self._bidder
+
+    @bidder.setter
+    def bidder(self, bidder: Investor):
+        """Sets the bidder of this NewBid.
+
+
+        :param bidder: The bidder of this NewBid.
+        :type bidder: Investor
+        """
+
+        self._bidder = bidder

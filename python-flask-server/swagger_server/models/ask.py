@@ -17,17 +17,17 @@ class Ask(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, quantity: int=None, price: int=None, id: int=None, seller: Investor=None, status: str=None, active: bool=True, created: datetime=None, modified: datetime=None):  # noqa: E501
+    def __init__(self, quantity: int=None, price: int=None, seller: Investor=None, id: int=None, status: str=None, active: bool=True, created: datetime=None, modified: datetime=None):  # noqa: E501
         """Ask - a model defined in Swagger
 
         :param quantity: The quantity of this Ask.  # noqa: E501
         :type quantity: int
         :param price: The price of this Ask.  # noqa: E501
         :type price: int
-        :param id: The id of this Ask.  # noqa: E501
-        :type id: int
         :param seller: The seller of this Ask.  # noqa: E501
         :type seller: Investor
+        :param id: The id of this Ask.  # noqa: E501
+        :type id: int
         :param status: The status of this Ask.  # noqa: E501
         :type status: str
         :param active: The active of this Ask.  # noqa: E501
@@ -40,8 +40,8 @@ class Ask(Model):
         self.swagger_types = {
             'quantity': int,
             'price': int,
-            'id': int,
             'seller': Investor,
+            'id': int,
             'status': str,
             'active': bool,
             'created': datetime,
@@ -51,8 +51,8 @@ class Ask(Model):
         self.attribute_map = {
             'quantity': 'quantity',
             'price': 'price',
-            'id': 'id',
             'seller': 'seller',
+            'id': 'id',
             'status': 'status',
             'active': 'active',
             'created': 'created',
@@ -61,8 +61,8 @@ class Ask(Model):
 
         self._quantity = quantity
         self._price = price
-        self._id = id
         self._seller = seller
+        self._id = id
         self._status = status
         self._active = active
         self._created = created
@@ -126,6 +126,27 @@ class Ask(Model):
         self._price = price
 
     @property
+    def seller(self) -> Investor:
+        """Gets the seller of this Ask.
+
+
+        :return: The seller of this Ask.
+        :rtype: Investor
+        """
+        return self._seller
+
+    @seller.setter
+    def seller(self, seller: Investor):
+        """Sets the seller of this Ask.
+
+
+        :param seller: The seller of this Ask.
+        :type seller: Investor
+        """
+
+        self._seller = seller
+
+    @property
     def id(self) -> int:
         """Gets the id of this Ask.
 
@@ -147,27 +168,6 @@ class Ask(Model):
             raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
-
-    @property
-    def seller(self) -> Investor:
-        """Gets the seller of this Ask.
-
-
-        :return: The seller of this Ask.
-        :rtype: Investor
-        """
-        return self._seller
-
-    @seller.setter
-    def seller(self, seller: Investor):
-        """Sets the seller of this Ask.
-
-
-        :param seller: The seller of this Ask.
-        :type seller: Investor
-        """
-
-        self._seller = seller
 
     @property
     def status(self) -> str:

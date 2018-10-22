@@ -10,9 +10,9 @@ from swagger_server import util
 def add_bid(body):  # noqa: E501
     """Add a new bid to the market
 
-    Add token buying offering # noqa: E501
+    Add a token buying offer to the marketplace.  # noqa: E501
 
-    :param body: Bid object that needs to be added to the market
+    :param body: Bid object that needs to be added to the market quantity is the amount of token and price is VND price of one token
     :type body: dict | bytes
 
     :rtype: None
@@ -77,6 +77,9 @@ def list_bids(status=None, offset=None, limit=None):  # noqa: E501
 
     :rtype: List[Bid]
     """
+
+    Bid.
+
     return 'do some magic!'
 
 

@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.investor import Investor  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,26 +16,31 @@ class NewAsk(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, quantity: int=None, price: int=None):  # noqa: E501
+    def __init__(self, quantity: int=None, price: int=None, seller: Investor=None):  # noqa: E501
         """NewAsk - a model defined in Swagger
 
         :param quantity: The quantity of this NewAsk.  # noqa: E501
         :type quantity: int
         :param price: The price of this NewAsk.  # noqa: E501
         :type price: int
+        :param seller: The seller of this NewAsk.  # noqa: E501
+        :type seller: Investor
         """
         self.swagger_types = {
             'quantity': int,
-            'price': int
+            'price': int,
+            'seller': Investor
         }
 
         self.attribute_map = {
             'quantity': 'quantity',
-            'price': 'price'
+            'price': 'price',
+            'seller': 'seller'
         }
 
         self._quantity = quantity
         self._price = price
+        self._seller = seller
 
     @classmethod
     def from_dict(cls, dikt) -> 'NewAsk':
@@ -92,3 +98,24 @@ class NewAsk(Model):
             raise ValueError("Invalid value for `price`, must not be `None`")  # noqa: E501
 
         self._price = price
+
+    @property
+    def seller(self) -> Investor:
+        """Gets the seller of this NewAsk.
+
+
+        :return: The seller of this NewAsk.
+        :rtype: Investor
+        """
+        return self._seller
+
+    @seller.setter
+    def seller(self, seller: Investor):
+        """Sets the seller of this NewAsk.
+
+
+        :param seller: The seller of this NewAsk.
+        :type seller: Investor
+        """
+
+        self._seller = seller
