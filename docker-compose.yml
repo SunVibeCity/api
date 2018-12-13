@@ -8,7 +8,9 @@ services:
       - "8080:8080"
     links:
       - redis
-    restart: always
+    environment:
+      FLASK_DEBUG: 1
+#    restart: always
   redis:
     image: redis
-    restart: always
+#    restart: always

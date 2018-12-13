@@ -1,7 +1,7 @@
 import os
 import os.path
 import sqlite3
-from utils.mt_io import print_stderr
+from swagger_server.utils.sv_io import print_stderr
 
 _db = None
 _new = False
@@ -27,7 +27,9 @@ def create_tables(conn):
             created INTEGER NOT NULL DEFAULT (strftime('%s','now')),
             updated INTEGER NOT NULL DEFAULT (strftime('%s','now'))
         );
-        
+        """)
+    c.execute(
+        """
         CREATE TABLE IF NOT EXISTS bids (
             id INTEGER PRIMARY KEY,
             quantity INTEGER NOT NULL,
@@ -38,7 +40,9 @@ def create_tables(conn):
             updated INTEGER NOT NULL DEFAULT (strftime('%s','now')),
             FOREIGN KEY (bidder) REFERENCES users (id)
         );   
-
+        """)
+    c.execute(
+        """
         CREATE TABLE IF NOT EXISTS asks (
             id INTEGER PRIMARY KEY,
             quantity INTEGER NOT NULL,

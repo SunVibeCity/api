@@ -1,10 +1,13 @@
 import connexion
 import six
 
-from swagger_server.models.bid import Bid  # noqa: E501
-from swagger_server.models.new_bid import NewBid  # noqa: E501
-from swagger_server.models.unexpected_error import UnexpectedError  # noqa: E501
+import swagger_server.utils.orm
 from swagger_server import util
+from datetime import datetime
+
+
+def get_timestamp():
+    return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
 
 def add_bid(body):  # noqa: E501
@@ -18,7 +21,8 @@ def add_bid(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = NewBid.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = NewBid.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'
 
 
@@ -46,7 +50,8 @@ def fok_bid(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = NewBid.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = NewBid.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'
 
 
@@ -77,9 +82,6 @@ def list_bids(status=None, offset=None, limit=None):  # noqa: E501
 
     :rtype: List[Bid]
     """
-
-    Bid.
-
     return 'do some magic!'
 
 
@@ -96,5 +98,6 @@ def update_bid(id, body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Bid.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = Bid.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'

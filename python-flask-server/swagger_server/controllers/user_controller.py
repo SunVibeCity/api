@@ -1,11 +1,9 @@
 import connexion
+from connexion import NoContent
 import six
+import json
 
-from swagger_server.models.inline_response200 import InlineResponse200  # noqa: E501
-from swagger_server.models.login_user import LoginUser  # noqa: E501
-from swagger_server.models.new_user import NewUser  # noqa: E501
-from swagger_server.models.unexpected_error import UnexpectedError  # noqa: E501
-from swagger_server.models.user import User  # noqa: E501
+from swagger_server.utils.orm import get_db, User
 from swagger_server import util
 
 
@@ -19,9 +17,14 @@ def add_user(body):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = NewUser.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    try:
+        if connexion.request.is_json:
+            get_db().add(User(**body))
+            get_db().commit()
+            return NoContent, 201
+        return 'do some magic!'
+    except Exception as e:
+        return {'message': str(e)}, 500
 
 
 def del_user(id):  # noqa: E501
@@ -47,7 +50,11 @@ def get_user(id):  # noqa: E501
 
     :rtype: User
     """
-    return 'do some magic!'
+    try:
+        user = get_db().query(User).filter(User.id == id).one_or_none()
+        return user.dump() if user is not None else ('Not found', 404)
+    except Exception as e:
+        return {'message': str(e)}, 500
 
 
 def list_users(offset=None, limit=None):  # noqa: E501
@@ -62,8 +69,11 @@ def list_users(offset=None, limit=None):  # noqa: E501
 
     :rtype: List[User]
     """
-    return 'do some magic!'
-
+    try:
+        q = get_db().query(User).limit(limit).offset(offset)
+        return [u.dump() for u in q]
+    except Exception as e:
+        return {'message': str(e)}, 500
 
 def update_user(id, body):  # noqa: E501
     """Update a user
@@ -78,7 +88,8 @@ def update_user(id, body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = User.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = User.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'
 
 
@@ -93,7 +104,8 @@ def user_login(body):  # noqa: E501
     :rtype: InlineResponse200
     """
     if connexion.request.is_json:
-        body = LoginUser.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = LoginUser.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'
 
 

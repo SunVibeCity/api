@@ -1,9 +1,7 @@
 import connexion
 import six
 
-from swagger_server.models.ask import Ask  # noqa: E501
-from swagger_server.models.new_ask import NewAsk  # noqa: E501
-from swagger_server.models.unexpected_error import UnexpectedError  # noqa: E501
+import swagger_server.utils.orm
 from swagger_server import util
 
 
@@ -18,7 +16,8 @@ def add_ask(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = NewAsk.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = NewAsk.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'
 
 
@@ -46,7 +45,8 @@ def fok_ask(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = NewAsk.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = NewAsk.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'
 
 
@@ -93,5 +93,6 @@ def update_ask(id, body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Ask.from_dict(connexion.request.get_json())  # noqa: E501
+        # body = Ask.from_dict(connexion.request.get_json())  # noqa: E501
+        pass
     return 'do some magic!'
