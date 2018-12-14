@@ -16,42 +16,42 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
-- name: bid
-  description: Bid operations on SunVibeToken marketplace
-  externalDocs:
-    description: Find out more about our web site
-    url: 'http://sunvibe.vn/investor'
-- name: ask
-  description: Ask operations on SunVibeToken marketplace
-  externalDocs:
-    description: Find out more about our web site
-    url: 'http://sunvibe.vn/investor'
-- name: user
-  description: 'User operations, sign-in, log-in, list etc.'
+  - name: bid
+    description: Bid operations on SunVibeToken marketplace
+    externalDocs:
+      description: Find out more about our web site
+      url: 'http://sunvibe.vn/investor'
+  - name: ask
+    description: Ask operations on SunVibeToken marketplace
+    externalDocs:
+      description: Find out more about our web site
+      url: 'http://sunvibe.vn/investor'
+  - name: user
+    description: 'User operations, sign-in, log-in, list etc.'
 paths:
   /bids:
     get:
       tags:
-      - bid
+        - bid
       summary: List Bids
       description: Multiple status values can be provided with comma separated strings
-      operationId: listBids
+      operationId: controllers.bid_controller.list_bids
       parameters:
-      - name: status
-        in: query
-        description: Status values that need to be considered for filter
-        required: false
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-            enum:
-            - available
-            - sold
-            default: available
-      - $ref: '#/components/parameters/offsetParam'
-      - $ref: '#/components/parameters/limitParam'
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - available
+                - sold
+              default: available
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
       responses:
         '200':
           description: OK
@@ -71,10 +71,10 @@ paths:
                 $ref: '#/components/schemas/UnexpectedError'
     post:
       tags:
-      - bid
+        - bid
       summary: Add a new bid to the market
       description: 'Add a token buying offer to the marketplace. '
-      operationId: addBid
+      operationId: controllers.bid_controller.add_bid
       responses:
         '201':
           description: New bid was added to the market successfully
@@ -97,8 +97,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
       requestBody:
         content:
           application/json:
@@ -111,12 +111,12 @@ paths:
   '/bids/{id}':
     get:
       tags:
-      - bid
+        - bid
       summary: Get bid details by ID
       description: Returns a bid based on a single ID
-      operationId: getBid
+      operationId: controllers.bid_controller.get_bid
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '200':
           description: OK
@@ -136,12 +136,12 @@ paths:
                 $ref: '#/components/schemas/UnexpectedError'
     put:
       tags:
-      - bid
+        - bid
       summary: Update an existing bid
       description: Modify bid status only
-      operationId: updateBid
+      operationId: controllers.bid_controller.update_bid
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '201':
           description: Updated
@@ -160,8 +160,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
       requestBody:
         content:
           application/json:
@@ -171,12 +171,12 @@ paths:
         required: true
     delete:
       tags:
-      - bid
+        - bid
       summary: Deletes and existing bid
       description: Deletes a single bet based on the ID supplied
-      operationId: delBid
+      operationId: controllers.bid_controller.del_bid
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '204':
           description: bid deleted
@@ -195,15 +195,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
   /fok-bids:
     post:
       tags:
-      - bid
+        - bid
       summary: Fill or kill bids
       description: Only accept existing ask - selling request
-      operationId: fokBid
+      operationId: controllers.bid_controller.fok_bid
       responses:
         '204':
           description: Deal succeed
@@ -220,8 +220,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
       requestBody:
         content:
           application/json:
@@ -232,26 +232,26 @@ paths:
   /asks:
     get:
       tags:
-      - ask
+        - ask
       summary: List Asks
       description: Multiple status values can be provided with comma separated strings
-      operationId: listAsks
+      operationId: controllers.ask_controller.list_asks
       parameters:
-      - name: status
-        in: query
-        description: Status values that need to be considered for filter
-        required: false
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-            enum:
-            - available
-            - sold
-            default: available
-      - $ref: '#/components/parameters/offsetParam'
-      - $ref: '#/components/parameters/limitParam'
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - available
+                - sold
+              default: available
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
       responses:
         '200':
           description: OK
@@ -275,10 +275,10 @@ paths:
                 $ref: '#/components/schemas/UnexpectedError'
     post:
       tags:
-      - ask
+        - ask
       summary: Add a new ask to the market
       description: Add token buying offering
-      operationId: addAsk
+      operationId: controllers.ask_controller.add_ask
       responses:
         '201':
           description: New ask was added to the market successfully
@@ -300,20 +300,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
       requestBody:
         $ref: '#/components/requestBodies/NewAsk'
   '/asks/{id}':
     get:
       tags:
-      - ask
+        - ask
       description: >-
         Returns a user based on a single ID, if the user does not have access to
         the pet
-      operationId: getAsk
+      operationId: controllers.ask_controller.get_ask
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '200':
           description: OK
@@ -333,12 +333,12 @@ paths:
                 $ref: '#/components/schemas/UnexpectedError'
     put:
       tags:
-      - ask
+        - ask
       summary: Update an existing ask
       description: ''
-      operationId: updateAsk
+      operationId: controllers.ask_controller.update_ask
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '201':
           description: Updated
@@ -357,8 +357,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
       requestBody:
         content:
           application/json:
@@ -368,11 +368,11 @@ paths:
         required: true
     delete:
       tags:
-      - ask
+        - ask
       description: deletes a single bet based on the ID supplied
-      operationId: delAsk
+      operationId: controllers.ask_controller.delAsk
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '204':
           description: ask deleted
@@ -391,15 +391,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
   /fok-asks:
     post:
       tags:
-      - ask
+        - ask
       summary: Fill or kill asks
       description: Only accept existing ask - selling request
-      operationId: fokAsk
+      operationId: controllers.ask_controller.fok_ask
       responses:
         '204':
           description: Deal succeed
@@ -416,20 +416,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
       requestBody:
         $ref: '#/components/requestBodies/NewAsk'
   /users:
     get:
       tags:
-      - user
+        - user
       summary: Returns all users in the database.
       description: Only the admin can access this.
-      operationId: listUsers
+      operationId: controllers.user_controller.list_users
       parameters:
-      - $ref: '#/components/parameters/offsetParam'
-      - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
       responses:
         '200':
           description: OK
@@ -452,14 +452,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - admin
+        - OAuth2:
+            - admin
     post:
       tags:
-      - user
+        - user
       summary: Creates a new user
       description: Only the admin user can create users.
-      operationId: addUser
+      operationId: controllers.user_controller.add_user
       responses:
         '201':
           description: New user was created successfully
@@ -481,8 +481,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - admin
+        - OAuth2:
+            - admin
       requestBody:
         content:
           application/json:
@@ -493,14 +493,14 @@ paths:
   '/users/{id}':
     get:
       tags:
-      - user
+        - user
       summary: Retrieves a user
       description: >-
         Users can only retrieve their own account, except for the admin, who can
         retrieve anyone.
-      operationId: getUser
+      operationId: controllers.user_controller.get_user
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '200':
           description: OK
@@ -519,18 +519,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - registered
+        - OAuth2:
+            - registered
     put:
       tags:
-      - user
+        - user
       summary: Update a user
       description: >-
         Users can only update their own account, except the admin, who can edit
         anyone.
-      operationId: updateUser
+      operationId: controllers.user_controller.update_user
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '201':
           description: Updated
@@ -549,8 +549,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - registered
+        - OAuth2:
+            - registered
       requestBody:
         content:
           application/json:
@@ -560,12 +560,12 @@ paths:
         required: true
     delete:
       tags:
-      - user
+        - user
       summary: Deletes a user
       description: 'Users can only delete their own account, admin can delete everyone else.'
-      operationId: delUser
+      operationId: controllers.user_controller.del_user
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '204':
           description: User deleted
@@ -584,15 +584,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
       security:
-      - OAuth2:
-        - investor
+        - OAuth2:
+            - investor
   /users/login:
     post:
       tags:
-      - user
+        - user
       summary: Logs in already registered users and admin
       description: ''
-      operationId: userLogin
+      operationId: controllers.user_controller.user_login
       responses:
         '200':
           description: Login was successful
@@ -629,12 +629,12 @@ paths:
   '/users/{id}/logout':
     post:
       tags:
-      - user
+        - user
       summary: Logs out the given user
       description: 'Users can only log themselves out, admin can log-out anyone.'
-      operationId: userLogout
+      operationId: controllers.user_controller.user_logout
       parameters:
-      - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/idParam'
       responses:
         '204':
           description: Logout was successful
@@ -662,8 +662,8 @@ externalDocs:
   description: Find out more about SunVibe
   url: 'http://sunvibe.vn'
 servers:
-- url: 'http://api.sunvibe.vn/v1'
-- url: 'http://localhost:8080/v1'
+  - url: 'http://api.sunvibe.vn/v1'
+#  - url: 'http://localhost:8080/v1'
 components:
   parameters:
     offsetParam:
@@ -731,33 +731,33 @@ components:
         bidder:
           $ref: '#/components/schemas/Investor'
       required:
-      - quantity
-      - price
+        - quantity
+        - price
     Bid:
       allOf:
-      - $ref: '#/components/schemas/NewBid'
-      - properties:
-          id:
-            type: integer
-            format: int64
-          status:
-            type: string
-            description: Bid Status
-            enum:
-            - open
-            - cancelled
-            - completed
-          active:
-            type: boolean
-            default: true
-          created:
-            type: string
-            format: date-time
-          modified:
-            type: string
-            format: date-time
-        required:
-        - id
+        - $ref: '#/components/schemas/NewBid'
+        - properties:
+            id:
+              type: integer
+              format: int64
+            status:
+              type: string
+              description: Bid Status
+              enum:
+                - open
+                - cancelled
+                - completed
+            active:
+              type: boolean
+              default: true
+            created:
+              type: string
+              format: date-time
+            modified:
+              type: string
+              format: date-time
+          required:
+            - id
     NewAsk:
       type: object
       properties:
@@ -770,33 +770,33 @@ components:
         seller:
           $ref: '#/components/schemas/Investor'
       required:
-      - quantity
-      - price
+        - quantity
+        - price
     Ask:
       allOf:
-      - $ref: '#/components/schemas/NewAsk'
-      - properties:
-          id:
-            type: integer
-            format: int64
-          status:
-            type: string
-            description: Bid Status
-            enum:
-            - open
-            - cancelled
-            - completed
-          active:
-            type: boolean
-            default: true
-          created:
-            type: string
-            format: date-time
-          modified:
-            type: string
-            format: date-time
-        required:
-        - id
+        - $ref: '#/components/schemas/NewAsk'
+        - properties:
+            id:
+              type: integer
+              format: int64
+            status:
+              type: string
+              description: Bid Status
+              enum:
+                - open
+                - cancelled
+                - completed
+            active:
+              type: boolean
+              default: true
+            created:
+              type: string
+              format: date-time
+            modified:
+              type: string
+              format: date-time
+          required:
+            - id
     LoginUser:
       type: object
       properties:
@@ -807,31 +807,31 @@ components:
           format: password
     NewUser:
       allOf:
-      - $ref: '#/components/schemas/LoginUser'
-      - properties:
-          id:
-            type: integer
-            format: int64
-          name:
-            type: string
-          phone:
-            type: string
-          email:
-            type: string
+        - $ref: '#/components/schemas/LoginUser'
+        - properties:
+            id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            phone:
+              type: string
+            email:
+              type: string
     User:
       allOf:
-      - $ref: '#/components/schemas/NewUser'
-      - properties:
-          password:
-            type: string
-            format: password
+        - $ref: '#/components/schemas/NewUser'
+        - properties:
+            password:
+              type: string
+              format: password
     Investor:
       allOf:
-      - $ref: '#/components/schemas/User'
+        - $ref: '#/components/schemas/User'
     UnexpectedError:
       required:
-      - code
-      - message
+        - code
+        - message
       properties:
         code:
           type: integer

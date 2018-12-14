@@ -1,6 +1,6 @@
 import connexion
 from connexion import NoContent
-from swagger_server.utils.orm import get_db, Bid
+from orm import get_db, Bid
 
 
 def add_bid(body):  # noqa: E501

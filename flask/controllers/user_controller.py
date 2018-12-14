@@ -1,6 +1,6 @@
 import connexion
 from connexion import NoContent
-from swagger_server.utils.orm import get_db, User
+from orm import get_db, User
 
 
 def add_user(body):  # noqa: E501
