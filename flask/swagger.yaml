@@ -6,9 +6,9 @@ info:
     \ but the quality assurance and monitoring done by SunVibe.\n"
   version: "0.1.0"
   title: "SunVibe API"
-  termsOfService: "http://sunvibe.vn/terms"
+  termsOfService: "http://sunvibe.city/terms"
   contact:
-    email: "apiteam@sunvibe.vn"
+    email: "apiteam@sunvibe.city"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -19,12 +19,12 @@ tags:
   description: "Bid operations on SunVibeToken marketplace"
   externalDocs:
     description: "Find out more about our web site"
-    url: "http://sunvibe.vn/investor"
+    url: "http://sunvibe.city/investor"
 - name: "ask"
   description: "Ask operations on SunVibeToken marketplace"
   externalDocs:
     description: "Find out more about our web site"
-    url: "http://sunvibe.vn/investor"
+    url: "http://sunvibe.city/investor"
 - name: "user"
   description: "User operations, sign-in, log-in, list etc."
 schemes:
@@ -82,7 +82,7 @@ paths:
           \ price is VND price of one token"
         required: true
         schema:
-          $ref: "#/definitions/NewBid"
+          $ref: "#/definitions/Bid"
       responses:
         201:
           description: "New bid was added to the market successfully"
@@ -101,9 +101,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
   /bids/{id}:
     get:
       tags:
@@ -159,9 +159,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
     delete:
       tags:
       - "bid"
@@ -185,9 +185,9 @@ paths:
           description: "unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
   /fok-bids:
     post:
       tags:
@@ -203,7 +203,7 @@ paths:
         description: "Bid object that needs to be added to the market"
         required: true
         schema:
-          $ref: "#/definitions/NewBid"
+          $ref: "#/definitions/Bid"
       responses:
         204:
           description: "Deal succeed"
@@ -217,9 +217,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
   /asks:
     get:
       tags:
@@ -275,7 +275,7 @@ paths:
         description: "Ask object that needs to be added to the market"
         required: true
         schema:
-          $ref: "#/definitions/NewAsk"
+          $ref: "#/definitions/Ask"
       responses:
         201:
           description: "New ask was added to the market successfully"
@@ -293,9 +293,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
   /asks/{id}:
     get:
       tags:
@@ -350,9 +350,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
     delete:
       tags:
       - "ask"
@@ -375,9 +375,9 @@ paths:
           description: "unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
   /fok-asks:
     post:
       tags:
@@ -393,7 +393,7 @@ paths:
         description: "Ask object that needs to be added to the market"
         required: true
         schema:
-          $ref: "#/definitions/NewAsk"
+          $ref: "#/definitions/Ask"
       responses:
         204:
           description: "Deal succeed"
@@ -407,9 +407,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
   /users:
     get:
       tags:
@@ -439,9 +439,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "admin"
+      # security:
+      # - OAuth2:
+      #   - "admin"
     post:
       tags:
       - "user"
@@ -455,7 +455,7 @@ paths:
           in: "body"
           required: true
           schema:
-            $ref: "#/definitions/NewUser"
+            $ref: "#/definitions/User"
           description: "The user account to create"
       responses:
         201:
@@ -501,9 +501,9 @@ paths:
           description: "unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "registered"
+      # security:
+      # - OAuth2:
+      #   - "registered"
     put:
       tags:
       - "user"
@@ -535,9 +535,9 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "registered"
+      # security:
+      # - OAuth2:
+      #   - "registered"
     delete:
       tags:
       - "user"
@@ -561,9 +561,9 @@ paths:
           description: "unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
-      security:
-      - OAuth2:
-        - "investor"
+      # security:
+      # - OAuth2:
+      #   - "investor"
   /users/login:
     post:
       tags:
@@ -581,7 +581,7 @@ paths:
           required: true
           description: "The login credentials"
           schema:
-            $ref: "#/definitions/LoginUser"
+            $ref: "#/definitions/User"
       responses:
         200:
           description: "Login was successful"
@@ -666,122 +666,204 @@ securityDefinitions:
   OAuth2:
     type: "oauth2"
     flow: "accessCode"
-    authorizationUrl: "https://sunvibe.vn/oauth/authorize"
-    tokenUrl: "https://sunvibe.vn/oauth/token"
+    authorizationUrl: "https://sunvibe.city/oauth/authorize"
+    tokenUrl: "https://sunvibe.city/oauth/token"
     scopes:
       investor: "Grants investor access. Users with confirmed registration."
       registered: "Grants registered user access."
       admin: "Grants access to administrative information."
 definitions:
-  NewBid:
-    type: "object"
-    properties:
-      quantity:
-        type: "integer"
-        format: "int32"
-      price:
-        type: "integer"
-        format: "int64"
-      bidder:
-        $ref: '#/definitions/Investor'
-    required:
-      - "quantity"
-      - "price"
   Bid:
-    allOf:
-      - $ref: '#/definitions/NewBid'
-      - properties:
-          id:
-            type: "integer"
-            format: "int64"
-          status:
-            type: "string"
-            description: "Bid Status"
-            enum:
-            - "open"
-            - "cancelled"
-            - "completed"
-          active:
-            type: "boolean"
-            default: true
-          created:
-            type: "string"
-            format: "date-time"
-          modified:
-            type: "string"
-            format: "date-time"
-        required:
-          - "id"
-  NewAsk:
     type: "object"
     properties:
+      id:
+        type: "integer"
+        format: "int64"
+      symbol:
+        type: "string"
       quantity:
         type: "integer"
         format: "int32"
       price:
         type: "integer"
         format: "int64"
-      seller:
-        $ref: '#/definitions/Investor'
+      user_id:
+        type: "integer"
+        format: "int64"
+        description: "Bidder user id"
+      active:
+        type: "boolean"
+        default: true
+      bidder:
+        $ref: '#/definitions/User'
+      company:
+        $ref: '#/definitions/Company'
+      created:
+        type: "string"
+        format: "date-time"
+      updated:
+        type: "string"
+        format: "date-time"
     required:
+      - "symbol"
       - "quantity"
       - "price"
+      - "user_id"
   Ask:
-    allOf:
-      - $ref: '#/definitions/NewAsk'
-      - properties:
-          id:
-            type: "integer"
-            format: "int64"
-          status:
-            type: "string"
-            description: "Bid Status"
-            enum:
-            - "open"
-            - "cancelled"
-            - "completed"
-          active:
-            type: "boolean"
-            default: true
-          created:
-            type: "string"
-            format: "date-time"
-          modified:
-            type: "string"
-            format: "date-time"
-        required:
-          - "id"
-  LoginUser:
     type: "object"
     properties:
+      id:
+        type: "integer"
+        format: "int64"
+      symbol:
+        type: "string"
+      quantity:
+        type: "integer"
+        format: "int32"
+      price:
+        type: "integer"
+        format: "int64"
+      user_id:
+        type: "integer"
+        format: "int64"
+        description: "Investor user id"
+      active:
+        type: "boolean"
+        default: true
+      investor:
+        $ref: '#/definitions/User'
+      company:
+        $ref: '#/definitions/Company'
+      created:
+        type: "string"
+        format: "date-time"
+      updated:
+        type: "string"
+        format: "date-time"
+    required:
+      - "symbol"
+      - "quantity"
+      - "price"
+      - "user_id"
+  Exchange:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      symbol:
+        type: "string"
+      quantity:
+        type: "integer"
+        format: "int32"
+      price:
+        type: "integer"
+        format: "int64"
+      seller_id:
+        type: "integer"
+        format: "int64"
+        description: "Seller user id"
+      buyer_id:
+        type: "integer"
+        format: "int64"
+        description: "Buyer user id"
+      created:
+        type: "string"
+        format: "date-time"
+      seller:
+        $ref: '#/definitions/User'
+      buyer:
+        $ref: '#/definitions/User'
+      company:
+        $ref: '#/definitions/Company'
+    required:
+      - "symbol"
+      - "quantity"
+      - "price"
+      - "seller_id"
+      - "buyer_id"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
       username:
         type: "string"
       password:
         type: "string"
         format: "password"
-  NewUser:
-    allOf:
-      - $ref: '#/definitions/LoginUser'
-      - properties:
-          id:
-            type: "integer"
-            format: "int64"
-          name:
-            type: "string"
-          phone:
-            type: "string"
-          email:
-            type: "string"
-  User:
-    allOf:
-      - $ref: '#/definitions/NewUser'
-      - properties:
-          password:
-            type: "string"
-            format: "password"
-  Investor:
-    allOf:
-      - $ref: '#/definitions/User'
+      name:
+        type: "string"
+      phone:
+        type: "string"
+      email:
+        type: "string"
+      admin:
+        type: "boolean"
+        default: false
+      investor:
+        type: "boolean"
+        default: false
+      locale:
+        type: "string"
+        default: "en_US"
+      verified:
+        type: "boolean"
+        default: false
+      blocked:
+        type: "boolean"
+        default: false
+      created:
+        type: "string"
+        format: "date-time"
+      updated:
+        type: "string"
+        format: "date-time"
+      bids:
+        $ref: '#/definitions/Bid'
+      asks:
+        $ref: '#/definitions/Ask'
+      sells:
+        $ref: '#/definitions/Exchange'
+      purchases:
+        $ref: '#/definitions/Exchange'
+    required:
+      - "username"
+  Company:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      symbol:
+        type: "string"
+      company_name:
+        type: "string"
+      industry:
+        type: "string"
+      website:
+        type: "string"
+      description:
+        type: "string"
+      sector:
+        type: "string"
+      tags:
+        type: "string"
+      created:
+        type: "string"
+        format: "date-time"
+      updated:
+        type: "string"
+        format: "date-time"
+      bids:
+        $ref: '#/definitions/Bid'
+      asks:
+        $ref: '#/definitions/Ask'
+      exchanges:
+        $ref: '#/definitions/Exchange'
+    required:
+      - "username"
   UnexpectedError:
     required:
       - "code"
@@ -794,4 +876,4 @@ definitions:
         type: "string"
 externalDocs:
   description: "Find out more about SunVibe"
-  url: "http://sunvibe.vn"
+  url: "http://sunvibe.city"
