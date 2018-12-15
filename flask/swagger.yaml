@@ -8,7 +8,7 @@ info:
   title: "SunVibe API"
   termsOfService: "http://sunvibe.city/terms"
   contact:
-    email: "apiteam@sunvibe.city"
+    email: "mr.oliver.nadj@gmail.com"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -29,6 +29,8 @@ tags:
     url: "http://sunvibe.city/investor"
 - name: "book"
   description: "Book entry operations on SunVibeToken marketplace"
+- name: "wallet"
+  description: "Wallet information of the users"
 schemes:
 - "http"
 paths:
@@ -266,9 +268,14 @@ paths:
       parameters:
       - name: "active"
         in: "query"
-        description: "Active status values that need to be considered for filter"
+        description: "Active status. Available for buy or not anymore"
         required: false
         type: "boolean"
+      - name: "symbol"
+        in: "query"
+        description: "Company or share symbol"
+        required: false
+        type: "string"
       - $ref: "#/parameters/offsetParam"
       - $ref: "#/parameters/limitParam"
       responses:
@@ -449,9 +456,14 @@ paths:
       parameters:
       - name: "active"
         in: "query"
-        description: "Active status values that need to be considered for filter"
+        description: "Active status. Available for sell or not anymore"
         required: false
         type: "boolean"
+      - name: "symbol"
+        in: "query"
+        description: "Company or share symbol"
+        required: false
+        type: "string"
       - $ref: "#/parameters/offsetParam"
       - $ref: "#/parameters/limitParam"
       responses:
@@ -622,7 +634,7 @@ paths:
       # security:
       # - OAuth2:
       #   - "investor"
-  /Book:
+  /book:
     get:
       tags:
       - "book"
@@ -771,6 +783,157 @@ paths:
           description: "Out of scope"
         404:
           description: "Book not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      # security:
+      # - OAuth2:
+      #   - "investor"
+  /wallet:
+    get:
+      tags:
+      - "wallet"
+      summary: "Lists wallets"
+      description: "List of wallets of the users "
+      operationId: "controllers.wallet_controller.list_wallets"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "owner"
+        in: "query"
+        description: "Owner id as a filter"
+        required: false
+        type: "integer"
+      - $ref: "#/parameters/offsetParam"
+      - $ref: "#/parameters/limitParam"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Wallet"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+    post:
+      tags:
+      - "wallet"
+      summary: "Add a new wallet"
+      description: "Add a new wallet and associates it with the owner"
+      operationId: "controllers.wallet_controller.add_wallet"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Wallet object that needs to be inserted"
+        required: true
+        schema:
+          $ref: "#/definitions/Wallet"
+      responses:
+        201:
+          description: "New wallet was added abd associated with the owner successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new entry"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      # security:
+      # - OAuth2:
+      #   - "investor"
+  /wallet/{id}:
+    get:
+      tags:
+      - "wallet"
+      description: "Returns a wallet info based on a single ID"
+      operationId: "controllers.wallet_controller.get_wallet"
+      produces:
+        - "application/json"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Wallet"
+        400:
+          description: "Invalid request message"
+        404:
+          description: "Wallet not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+    put:
+      tags:
+      - "wallet"
+      summary: "Update an existing wallet"
+      description: ""
+      operationId: "controllers.wallet_controller.update_wallet"
+      consumes:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      - in: "body"
+        name: "body"
+        description: "Wallet that needs to be modified"
+        required: true
+        schema:
+          $ref: "#/definitions/Wallet"
+      responses:
+        201:
+          description: "Updated"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "Wallet not found"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      # security:
+      # - OAuth2:
+      #   - "investor"
+    delete:
+      tags:
+      - "wallet"
+      description: "Deletes a wallet based on the ID supplied"
+      operationId: "controllers.wallet_controller.del_wallet"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      responses:
+        204:
+          description: "ask deleted"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "Wallet not found"
         default:
           description: "unexpected error"
           schema:

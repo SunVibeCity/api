@@ -70,12 +70,14 @@ def get_bid(id):
         return {'message': str(e)}, 500
 
 
-def list_bids(active=None, offset=None, limit=None):  
+def list_bids(active=None, symbol=None, offset=None, limit=None):  
     """
     Lists Bids
     Lists buying offers
-    :param active: Active status values that need to be considered for filter
+    :param active: Active status. Available for buy or not anymore
     :type active: bool
+    :param symbol: Company or share symbol
+    :type symbol: str
     :param offset: The number of items to skip before starting to collect the result set.
     :type offset: int
     :param limit: The numbers of items to return.
@@ -86,6 +88,8 @@ def list_bids(active=None, offset=None, limit=None):
         q = get_db().query(Bid)
         if active is not None:
             q = q.filter(Bid.active == active)
+        if symbol is not None:
+            q = q.filter(Bid.symbol == symbol)
         q = q.limit(limit).offset(offset)
         return [u.dump() for u in q]
     except Exception as e:

@@ -58,7 +58,7 @@ def fok_ask(body):
 def get_ask(id):
     """
     Get ask details by ID
-    Returns a user based on a single ID, if the user does not have access to the pet
+    Returns a user based on a single ID
     :param id: ID of the object to fetch
     :type id: int
     :rtype: Ask
@@ -70,12 +70,14 @@ def get_ask(id):
         return {'message': str(e)}, 500
 
 
-def list_asks(active=None, offset=None, limit=None):
+def list_asks(active=None, symbol=None, offset=None, limit=None):
     """
     Lists Asks
     Lists of selling offers in the marketplace
-    :param active: Active status values that need to be considered for filter
+    :param active: Active status. Available for sell or not anymore
     :type active: bool
+    :param symbol: Company or share symbol
+    :type symbol: str
     :param offset: The number of items to skip before starting to collect the result set.
     :type offset: int
     :param limit: The numbers of items to return.
@@ -86,6 +88,8 @@ def list_asks(active=None, offset=None, limit=None):
         q = get_db().query(Ask)
         if active is not None:
             q = q.filter(Ask.active == active)
+        if symbol is not None:
+            q = q.filter(Ask.symbol == symbol)
         q = q.limit(limit).offset(offset)
         return [a.dump() for a in q]
     except Exception as e:
