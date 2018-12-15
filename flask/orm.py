@@ -25,6 +25,9 @@ class User(Base):
     updated = Column(DateTime(), server_default=text("(datetime('now'))"))
     bids = relationship("Bid", back_populates="bidder")
     asks = relationship("Ask", back_populates="investor")
+    book = relationship("Book", back_populates="owner")
+    wallets = relationship("Wallet", back_populates="owner")
+    transactions = relationship("Transaction", back_populates="user")
     sells = relationship("Exchange", back_populates="seller", primaryjoin="Exchange.seller_id==User.id")
     purchases = relationship("Exchange", back_populates="buyer", primaryjoin="Exchange.buyer_id==User.id")
 
@@ -52,15 +55,15 @@ class Bid(Base):
     quantity = Column(Integer)
     price = Column(Integer)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    status = Column(Boolean, default=True)
+    active = Column(Boolean, default=True)
     created = Column(DateTime(), server_default=text("(datetime('now'))"))
     updated = Column(DateTime(), server_default=text("(datetime('now'))"))
     bidder = relationship("User", back_populates="bids")
     company = relationship("Company", back_populates="bids")
 
     def __repr__(self):
-        return "<Bid(id='%s', symbol='%s', quantity='%s', price='%s', user_id='%s', status='%s')>" % (
-            self.id, self.symbol, self.quantity, self.price, self.user_id, self.status
+        return "<Bid(id='%s', symbol='%s', quantity='%s', price='%s', user_id='%s', active='%s')>" % (
+            self.id, self.symbol, self.quantity, self.price, self.user_id, self.active
         )
 
     def update(self, **kwargs):
@@ -82,15 +85,15 @@ class Ask(Base):
     quantity = Column(Integer)
     price = Column(Integer)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    status = Column(Boolean, default=True)
+    active = Column(Boolean, default=True)
     created = Column(DateTime(), server_default=text("(datetime('now'))"))
     updated = Column(DateTime(), server_default=text("(datetime('now'))"))
     investor = relationship("User", back_populates="asks")
     company = relationship("Company", back_populates="asks")
 
     def __repr__(self):
-        return "<Ask(id='%s', symbol='%s', quantity='%s', price='%s', user_id='%s', status='%s')>" % (
-            self.id, self.symbol, self.quantity, self.price, self.user_id, self.status
+        return "<Ask(id='%s', symbol='%s', quantity='%s', price='%s', user_id='%s', active='%s')>" % (
+            self.id, self.symbol, self.quantity, self.price, self.user_id, self.active
         )
 
     def update(self, **kwargs):
@@ -100,6 +103,92 @@ class Ask(Base):
             for k, v in kwargs.items():
                 if k in p:
                     self.__setattr__(k, v)
+
+    def dump(self):
+        return dict([(k, v) for k, v in vars(self).items() if not k.startswith('_')])
+
+
+class Book(Base):
+    __tablename__ = 'book'
+    id = Column(Integer, primary_key=True)
+    symbol = Column(String(15), ForeignKey('companies.id'), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    created = Column(DateTime(), server_default=text("(datetime('now'))"))
+    updated = Column(DateTime(), server_default=text("(datetime('now'))"))
+    owner = relationship("User", back_populates="book")
+    company = relationship("Company", back_populates="book")
+
+    def __repr__(self):
+        return "<Book(id='%s', symbol='%s', quantity='%s', user_id='%s')>" % (
+            self.id, self.symbol, self.quantity, self.user_id
+        )
+
+    def update(self, **kwargs):
+        if len(kwargs):
+            self.updated = datetime.datetime.utcnow()
+            p = ('quantity')
+            for k, v in kwargs.items():
+                if k in p:
+                    self.__setattr__(k, v)
+
+    def update(self, **kwargs):
+        pass
+
+    def dump(self):
+        return dict([(k, v) for k, v in vars(self).items() if not k.startswith('_')])
+
+
+class Wallet(Base):
+    __tablename__ = 'wallets'
+    id = Column(Integer, primary_key=True)
+    currency = Column(String(3), nullable=False, default='VND')
+    amount = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    created = Column(DateTime(), server_default=text("(datetime('now'))"))
+    updated = Column(DateTime(), server_default=text("(datetime('now'))"))
+    owner = relationship("User", back_populates="wallets")
+
+    def __repr__(self):
+        return "<Wallet(id='%s', currency='%s', amount='%s', user_id='%s')>" % (
+            self.id, self.currency, self.amount, self.user_id
+        )
+
+    def update(self, **kwargs):
+        if len(kwargs):
+            self.updated = datetime.datetime.utcnow()
+            p = ('amount')
+            for k, v in kwargs.items():
+                if k in p:
+                    self.__setattr__(k, v)
+
+    def update(self, **kwargs):
+        pass
+
+    def dump(self):
+        return dict([(k, v) for k, v in vars(self).items() if not k.startswith('_')])
+
+
+class Transaction(Base):
+    __tablename__ = 'transactions'
+    id = Column(Integer, primary_key=True)
+    currency = Column(String(3), nullable=False, default='VND')
+    sent = Column(Integer, nullable=False)
+    received = Column(Integer, nullable=False)
+    fee = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    description = Column(String)
+    tags = Column(String)
+    created = Column(DateTime(), server_default=text("(datetime('now'))"))
+    user = relationship("User", back_populates="transactions")
+
+    def __repr__(self):
+        return "<Transaction(id='%s', currency='%s', sent='%s', received='%s', user_id='%s', description='%s')>" % (
+            self.id, self.currency, self.sent, self.received, self.user_id, self.description
+        )
+
+    def update(self, **kwargs):
+        pass
 
     def dump(self):
         return dict([(k, v) for k, v in vars(self).items() if not k.startswith('_')])
@@ -144,6 +233,7 @@ class Company(Base):
     updated = Column(DateTime(), server_default=text("(datetime('now'))"))
     bids = relationship("Bid", back_populates="company")
     asks = relationship("Ask", back_populates="company")
+    book = relationship("Book", back_populates="company")
     exchanges = relationship("Exchange", back_populates="company")
 
     def __repr__(self):
