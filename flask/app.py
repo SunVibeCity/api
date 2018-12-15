@@ -8,7 +8,7 @@ db_session = None
 
 logging.basicConfig(level=logging.INFO)
 app = connexion.FlaskApp(__name__)
-app.add_api('swagger.yaml', arguments={'title': 'SunVibe API t'})
+app.add_api('swagger.yaml', arguments={'title': 'SunVibe API'})
 application = app.app
 
 

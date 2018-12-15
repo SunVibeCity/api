@@ -69,7 +69,7 @@ class Bid(Base):
     def update(self, **kwargs):
         if len(kwargs):
             self.updated = datetime.datetime.utcnow()
-            p = ('quantity', 'price', 'bidder', 'status')
+            p = ('status')
             for k, v in kwargs.items():
                 if k in p:
                     self.__setattr__(k, v)
@@ -99,7 +99,7 @@ class Ask(Base):
     def update(self, **kwargs):
         if len(kwargs):
             self.updated = datetime.datetime.utcnow()
-            p = ('quantity', 'price', 'bidder', 'status')
+            p = ('status')
             for k, v in kwargs.items():
                 if k in p:
                     self.__setattr__(k, v)

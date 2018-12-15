@@ -15,6 +15,8 @@ info:
 host: "localhost:8080"
 basePath: "/v1"
 tags:
+- name: "user"
+  description: "User operations, sign-in, log-in, list etc."
 - name: "bid"
   description: "Bid operations on SunVibeToken marketplace"
   externalDocs:
@@ -25,8 +27,8 @@ tags:
   externalDocs:
     description: "Find out more about our web site"
     url: "http://sunvibe.city/investor"
-- name: "user"
-  description: "User operations, sign-in, log-in, list etc."
+- name: "book"
+  description: "Book entry operations on SunVibeToken marketplace"
 schemes:
 - "http"
 paths:
@@ -116,7 +118,7 @@ paths:
         400:
           description: "Invalid request message"
         404:
-          description: "Ask not found"
+          description: "User not found"
         default:
           description: "unexpected error"
           schema:
@@ -150,7 +152,7 @@ paths:
         403:
           description: "Out of scope"
         404:
-          description: "Ask not found"
+          description: "User not found"
         default:
           description: "Unexpected error"
           schema:
@@ -256,24 +258,17 @@ paths:
     get:
       tags:
       - "bid"
-      summary: "List Bids"
-      description: "Multiple status values can be provided with comma separated strings"
+      summary: "Lists Bids"
+      description: "Lists buying offers"
       operationId: "controllers.bid_controller.list_bids"
       produces:
       - "application/json"
       parameters:
-      - name: "status"
+      - name: "active"
         in: "query"
-        description: "Status values that need to be considered for filter"
+        description: "Active status values that need to be considered for filter"
         required: false
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
+        type: "boolean"
       - $ref: "#/parameters/offsetParam"
       - $ref: "#/parameters/limitParam"
       responses:
@@ -293,7 +288,7 @@ paths:
       tags:
       - "bid"
       summary: "Add a new bid to the market"
-      description: "Add a token buying offer to the marketplace. "
+      description: "Add a token buying offer to the marketplace."
       operationId: "controllers.bid_controller.add_bid"
       consumes:
       - "application/json"
@@ -446,24 +441,17 @@ paths:
     get:
       tags:
       - "ask"
-      summary: "List Asks"
-      description: "Multiple status values can be provided with comma separated strings"
+      summary: "Lists Asks"
+      description: "Lists of selling offers in the marketplace"
       operationId: "controllers.ask_controller.list_asks"
       produces:
       - "application/json"
       parameters:
-      - name: "status"
+      - name: "active"
         in: "query"
-        description: "Status values that need to be considered for filter"
+        description: "Active status values that need to be considered for filter"
         required: false
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
+        type: "boolean"
       - $ref: "#/parameters/offsetParam"
       - $ref: "#/parameters/limitParam"
       responses:
@@ -522,7 +510,8 @@ paths:
     get:
       tags:
       - "ask"
-      description: "Returns a user based on a single ID, if the user does not have access to the pet"
+      summary: "Get ask details by ID"
+      description: "Returns a user based on a single ID"
       operationId: "controllers.ask_controller.get_ask"
       produces:
         - "application/json"
@@ -545,7 +534,7 @@ paths:
       tags:
       - "ask"
       summary: "Update an existing ask"
-      description: ""
+      description: "Modify bid status only"
       operationId: "controllers.ask_controller.update_ask"
       consumes:
       - "application/json"
@@ -553,7 +542,7 @@ paths:
       - $ref: "#/parameters/idParam"
       - in: "body"
         name: "body"
-        description: "Ask object that needs to be added to the store"
+        description: "Ask object that needs to be added to the marketplace"
         required: true
         schema:
           $ref: "#/definitions/Ask"
@@ -578,7 +567,8 @@ paths:
     delete:
       tags:
       - "ask"
-      description: "deletes a single bet based on the ID supplied"
+      summary: "Deletes and existing ask"
+      description: "Deletes a single bet based on the ID supplied"
       operationId: "controllers.ask_controller.del_ask"
       parameters:
       - $ref: "#/parameters/idParam"
@@ -627,6 +617,162 @@ paths:
           description: "Out of scope"
         default:
           description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      # security:
+      # - OAuth2:
+      #   - "investor"
+  /Book:
+    get:
+      tags:
+      - "book"
+      summary: "Lists the Book"
+      description: "Lists entries from the book, and tells who own how many shares"
+      operationId: "controllers.book_controller.list_entries"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "symbol"
+        in: "query"
+        description: "Symbol as a filter"
+        required: false
+        type: "string"
+      - name: "owner"
+        in: "query"
+        description: "Owner id as a filter"
+        required: false
+        type: "integer"
+      - $ref: "#/parameters/offsetParam"
+      - $ref: "#/parameters/limitParam"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Book"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+    post:
+      tags:
+      - "book"
+      summary: "Enter a new entry to the book"
+      description: "Add token buying offering"
+      operationId: "controllers.book_controller.add_entry"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Book entry object that needs to be added to the book"
+        required: true
+        schema:
+          $ref: "#/definitions/Book"
+      responses:
+        201:
+          description: "New ask was added to the market successfully"
+          headers:
+            Location:
+              type: "string"
+              description: "The Server returns the URL of the new entry"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      # security:
+      # - OAuth2:
+      #   - "investor"
+  /book/{id}:
+    get:
+      tags:
+      - "book"
+      description: "Returns an entry from the book based on a single ID"
+      operationId: "controllers.book_controller.get_entry"
+      produces:
+        - "application/json"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Book"
+        400:
+          description: "Invalid request message"
+        404:
+          description: "Book entry not found"
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+    put:
+      tags:
+      - "book"
+      summary: "Update an existing entry of the book"
+      description: ""
+      operationId: "controllers.book_controller.update_entry"
+      consumes:
+      - "application/json"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      - in: "body"
+        name: "body"
+        description: "Book entry object that needs to be modified"
+        required: true
+        schema:
+          $ref: "#/definitions/Book"
+      responses:
+        201:
+          description: "Updated"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "Book entry not found"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/UnexpectedError"
+      # security:
+      # - OAuth2:
+      #   - "investor"
+    delete:
+      tags:
+      - "book"
+      description: "Deletes a single book entry based on the ID supplied"
+      operationId: "controllers.book_controller.del_entry"
+      parameters:
+      - $ref: "#/parameters/idParam"
+      responses:
+        204:
+          description: "ask deleted"
+        400:
+          description: "Invalid request message"
+        401:
+          description: "Not authenticated"
+        403:
+          description: "Out of scope"
+        404:
+          description: "Book not found"
+        default:
+          description: "unexpected error"
           schema:
             $ref: "#/definitions/UnexpectedError"
       # security:
@@ -826,7 +972,6 @@ definitions:
     required:
       - "symbol"
       - "quantity"
-      - "price"
       - "user_id"
   Wallet:
     type: "object"

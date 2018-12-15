@@ -3,14 +3,12 @@ from connexion import NoContent
 from orm import get_db, User
 
 
-def add_user(body):  # noqa: E501
-    """Creates a new user
-
-    Only the admin user can create users. # noqa: E501
-
+def add_user(body):  
+    """
+    Creates a new user
+    Only the admin user can create users.
     :param body: The user account to create
     :type body: dict | bytes
-
     :rtype: None
     """
     try:
@@ -23,14 +21,12 @@ def add_user(body):  # noqa: E501
         return {'message': str(e)}, 500
 
 
-def del_user(id):  # noqa: E501
-    """Deletes a user
-
-    Users can only delete their own account, admin can delete everyone else. # noqa: E501
-
+def del_user(id):  
+    """
+    Deletes a user
+    Users can only delete their own account, admin can delete everyone else.
     :param id: ID of the object to fetch
     :type id: int
-
     :rtype: None
     """
     try:
@@ -45,14 +41,12 @@ def del_user(id):  # noqa: E501
         return {'message': str(e)}, 500
 
 
-def get_user(id):  # noqa: E501
-    """Retrieves a user
-
-    Users can only retrieve their own account, except for the admin, who can retrieve anyone. # noqa: E501
-
+def get_user(id):  
+    """
+    Retrieves a user
+    Users can only retrieve their own account, except for the admin, who can retrieve anyone.
     :param id: ID of the object to fetch
     :type id: int
-
     :rtype: User
     """
     try:
@@ -62,16 +56,14 @@ def get_user(id):  # noqa: E501
         return {'message': str(e)}, 500
 
 
-def list_users(offset=None, limit=None):  # noqa: E501
-    """Returns all users in the database.
-
-    Only the admin can access this. # noqa: E501
-
+def list_users(offset=None, limit=None):  
+    """
+    Returns all users in the database.
+    Only the admin can access this.
     :param offset: The number of items to skip before starting to collect the result set.
     :type offset: int
     :param limit: The numbers of items to return.
     :type limit: int
-
     :rtype: List[User]
     """
     try:
@@ -81,16 +73,14 @@ def list_users(offset=None, limit=None):  # noqa: E501
         return {'message': str(e)}, 500
 
 
-def update_user(id, body):  # noqa: E501
-    """Update a user
-
-    Users can only update their own account, except the admin, who can edit anyone. # noqa: E501
-
+def update_user(id, body):  
+    """
+    Update a user
+    Users can only update their own account, except the admin, who can edit anyone.
     :param id: ID of the object to fetch
     :type id: int
     :param body: The user account to create
     :type body: dict | bytes
-
     :rtype: None
     """
     try:
@@ -107,14 +97,11 @@ def update_user(id, body):  # noqa: E501
         return {'message': str(e)}, 500
 
 
-def user_login(body):  # noqa: E501
-    """Logs in already registered users and admin
-
-     # noqa: E501
-
+def user_login(body):  
+    """
+    Logs in already registered users and admin
     :param body: The login credentials
     :type body: dict | bytes
-
     :rtype: InlineResponse200
     """
     try:
@@ -123,14 +110,12 @@ def user_login(body):  # noqa: E501
         return {'message': str(e)}, 500
 
 
-def user_logout(id):  # noqa: E501
-    """Logs out the given user
-
-    Users can only log themselves out, admin can log-out anyone. # noqa: E501
-
+def user_logout(id):  
+    """
+    Logs out the given user
+    Users can only log themselves out, admin can log-out anyone.
     :param id: ID of the object to fetch
     :type id: int
-
     :rtype: None
     """
     try:
