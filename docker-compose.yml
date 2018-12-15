@@ -10,16 +10,6 @@ services:
 #      - redis
     environment:
       FLASK_DEBUG: 1
-#  python-flask-server:
-#    build: ./python-flask-server
-#    volumes:
-#      - ./python-flask-server:/usr/src/app
-#    ports:
-#      - "8080:8080"
-##    links:
-##      - redis
-#    environment:
-#      FLASK_DEBUG: 1
 #    restart: always
 #  redis:
 #    image: redis
